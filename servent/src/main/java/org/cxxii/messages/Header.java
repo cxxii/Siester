@@ -2,6 +2,8 @@ package org.cxxii.messages;
 
 import java.util.UUID;
 
+// Potentially remove this and let messages be created w/ individual parts
+
 public class Header {
 
     private UUID id;
@@ -74,9 +76,4 @@ public class Header {
         header[22] = (byte) ((payloadLength >> 24) & 0xFF);
         return header;
     }
-
-//Class: If the header has a fixed structure with specific fields.
-//Interface: If  different types of headers that may have varying structures.
-// payload Similar to Header, choose a class if the payload structure is fixed. Use an interface if you need different payload structures.
-
 }

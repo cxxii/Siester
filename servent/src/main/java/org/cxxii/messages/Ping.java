@@ -62,15 +62,6 @@ public class Ping extends MessageAbstract {
         return hops;
     }
 
-    @Override
-    public void process() {
-
-    }
-
-    @Override
-    public void create() {
-
-    }
 
     public void setHops(byte hops) {
         this.hops = hops;

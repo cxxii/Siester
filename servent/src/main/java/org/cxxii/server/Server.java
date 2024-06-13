@@ -1,9 +1,6 @@
 package org.cxxii.server;
 
-import org.cxxii.messages.Bootstrap;
-import org.cxxii.messages.MessageFactoryImpl;
-import org.cxxii.messages.PingMessageParser;
-import org.cxxii.messages.PongMessageParser;
+import org.cxxii.messages.*;
 import org.cxxii.server.config.Config;
 import org.cxxii.server.config.ConfigManager;
 import org.slf4j.Logger;
@@ -13,9 +10,6 @@ import java.io.IOException;
 
 public class Server {
     private final static Logger LOGGER = LoggerFactory.getLogger(Server.class);
-
-    public Server() throws IOException {
-    }
 
     public static void main(String[] args) throws IOException {
         // this is your main thread
@@ -35,6 +29,9 @@ public class Server {
         // Register parsers for different message types
         messageFactory.setParser((byte) 0x00, new PingMessageParser());
         messageFactory.setParser((byte) 0x01, new PongMessageParser());
+        messageFactory.setParser((byte) 0x40, new PushMessageParser());
+        messageFactory.setParser((byte) 0x80, new QueryMessageParser());
+        messageFactory.setParser((byte) 0x81, new QueryHitMessageParser());
 
         try {
             ServerListenerThread serverListenerThread = new ServerListenerThread(conf.getPort(), conf.getWebroot(), messageFactory);
@@ -54,7 +51,7 @@ public class Server {
         }
 
         // !!!! KEEP !!!!
-        //PingMessage.startPings();
+        startPings();
 
         //message.process();
         //message.create();
@@ -95,9 +92,7 @@ public class Server {
     }
 
 
-
-
-        // if host cache is empty then ping bootstrap and write hosts to hostcache
+    // if host cache is empty then ping bootstrap and write hosts to hostcache
 
         // else
 }

@@ -25,11 +25,13 @@ public class PingMessageParser implements MessageParser {
         byte hops = header[18];
         int payloadLength = ByteBuffer.wrap(Arrays.copyOfRange(header,19,23)).getInt();
 
-        LOGGER.debug("ID of ping recieved " + Arrays.toString(id));
+        LOGGER.debug("ID of ping received " + Arrays.toString(id));
+
+        PingMessage ping = new PingMessage(id, typeId, ttl, hops, payloadLength, payload);
 
 
-        PingMessage myping = new PingMessage(id, typeId, ttl, hops, payloadLength, payload);
-        myping.process(id, typeId, ttl, hops, payloadLength, addr);
+
+        ping.process(id, typeId, ttl, hops, payloadLength, addr);
 
 
 

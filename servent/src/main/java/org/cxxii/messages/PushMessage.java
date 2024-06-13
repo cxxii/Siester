@@ -1,4 +1,4 @@
 package org.cxxii.messages;
 
-public class Push {
+public class PushMessage {
 }

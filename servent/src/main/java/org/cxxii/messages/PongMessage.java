@@ -12,17 +12,22 @@ import java.util.Arrays;
 
 public class PongMessage extends MessageAbstract {
 
+
+    // LOGGER
     private final static Logger LOGGER = LoggerFactory.getLogger(PongMessage.class);
 
-    //HEADER
-    private byte[] pingID;
+
+    // CONSTANTS
     private static final byte TYPE_ID = (byte) 0x01;
+    private static final int PAYLOAD_LENGTH = 13;
+    private static final byte[] PAYLOAD = null;
+
+
+    // INSTANCE
+    private byte[] pingID; //byte array as it wont be converted back to uuid
+    private int PayloadLength;
     private byte timeToLive;
     private byte hops;
-    private int payloadLength;
-
-
-    // PAYLOAD
     private int portNum;
     private String ipAddress; //change to byte[]
     private byte[] ipAddr; //change to byte[]
@@ -32,59 +37,35 @@ public class PongMessage extends MessageAbstract {
 
     // CONSTRUCTORS
 
-    public PongMessage(byte[] id, byte typeID, byte ttl, byte hops, byte payloadLength, int port, byte[] ip, byte sharedFiles, int kbShared) {
-        this.pingID = id;
-        this.timeToLive = ttl;
-        this.hops = hops;
-        this.ipAddr= ip;
-        this.portNum = port;
-        this.sharedFiles = sharedFiles;
-        this.kilobytesShared = kbShared;
-        this.payloadLength = payloadLength;
-    }
-
-    public PongMessage(byte timeToLive, byte hops, String ipAddress, int portNum, byte sharedFiles, int kilobytesShared, int payloadLength) {
-        this.ipAddress = ipAddress;
-        this.portNum = portNum;
-        this.sharedFiles = sharedFiles;
-        this.kilobytesShared = kilobytesShared;
-        this.payloadLength = payloadLength;
-    }
-
-    public PongMessage(byte[] pingID, byte timeToLive, byte hops, String ipAddress, int portNum, byte sharedFiles, int kilobytesShared, int payloadLength) {
-        this.pingID = pingID;
-        this.timeToLive = timeToLive;
-        this.hops = hops;
-        this.ipAddress = ipAddress;
-        this.portNum = portNum;
-        this.sharedFiles = sharedFiles;
-        this.kilobytesShared = kilobytesShared;
-        this.payloadLength = payloadLength;
-    }
-
-    public PongMessage(byte[] pingID, byte timeToLive, byte hops, int payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
-        this.pingID = pingID;
-        this.timeToLive = timeToLive;
-        this.hops = hops;
-        this.payloadLength = payloadLength;
-        this.portNum = portNum;
-        this.ipAddr = ipAddress;
-        this.sharedFiles = sharedFiles;
-        this.kilobytesShared = kilobytesShared;
-    }
-
 //    public PongMessage(byte[] id, byte typeID, byte ttl, byte hops, byte payloadLength, int port, byte[] ip, byte sharedFiles, int kbShared) {
 //        this.pingID = id;
 //        this.timeToLive = ttl;
 //        this.hops = hops;
-//        this.payloadLength = payloadLength;
+//        this.ipAddr= ip;
 //        this.portNum = port;
-//        this.ipAddr = ip;
 //        this.sharedFiles = sharedFiles;
 //        this.kilobytesShared = kbShared;
+//        this.payloadLength = payloadLength;
 //    }
 
+//    public PongMessage(byte timeToLive, byte hops, String ipAddress, int portNum, byte sharedFiles, int kilobytesShared, int payloadLength) {
+//        this.ipAddress = ipAddress;
+//        this.portNum = portNum;
+//        this.sharedFiles = sharedFiles;
+//        this.kilobytesShared = kilobytesShared;
+//        this.payloadLength = payloadLength;
+//    }
+
+
+    // Cant rememeber why I have this ?
     public PongMessage() {
+        super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH, null);
+    }
+
+
+
+    public PongMessage(byte[] bytesMessageID, byte typeId, byte timeToLive, byte hops, int payloadLength, byte[] payload) {
+        super(bytesMessageID, typeId, timeToLive, hops, payloadLength, payload);
     }
 
 

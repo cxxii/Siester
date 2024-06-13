@@ -5,17 +5,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/polaris/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/servent/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/servent/servent/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/servent/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/servent/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Handshake.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Handshake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Header.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Payload.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Payload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Push.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PushMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Query.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHit.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHitMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/servent" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" root0="SKIP_INSPECTION" />
@@ -27,30 +51,33 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2hkCcxSNDKGnuWWL3S3xwrlFsD5" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "<unknown>",
-    "last_opened_file_path": "/Users/callum/Documents/PROJECT/code/siester/servent",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.44899738",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "MavenSettings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ping__refactor&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/callum/Documents/Coding/repos/siester&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.44899738&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/servent" />
@@ -61,6 +88,19 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Server">
+    <configuration name="HttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.cxxii.HttpServer" />
+      <module name="polaris" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.cxxii.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Server" type="Application" factoryName="Application" temporary="true">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -88,22 +128,6 @@
       <option name="PACKAGE_NAME" value="messages.parse" />
       <option name="MAIN_CLASS_NAME" value="messages.parse.PingMessageParserTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PingMessageParserTest.testParseWithEmptyPayload" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Node" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="messages.parse.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="messages.parse" />
-      <option name="MAIN_CLASS_NAME" value="messages.parse.PingMessageParserTest" />
-      <option name="METHOD_NAME" value="testParseWithEmptyPayload" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -143,10 +167,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.HttpServer" />
         <item itemvalue="JUnit.PingMessageParserTest.testParseWithNullPayload" />
         <item itemvalue="JUnit.PingMessageParserTest" />
         <item itemvalue="JUnit.PingMessageParserTest.testParseWithNullHeader" />
-        <item itemvalue="JUnit.PingMessageParserTest.testParseWithEmptyPayload" />
       </list>
     </recent_temporary>
   </component>
@@ -163,7 +187,10 @@
       <workItem from="1718135513291" duration="226000" />
       <workItem from="1718136604063" duration="313000" />
       <workItem from="1718136930912" duration="283000" />
-      <workItem from="1718137235272" duration="6639000" />
+      <workItem from="1718137235272" duration="14062000" />
+      <workItem from="1718285601605" duration="13905000" />
+      <workItem from="1718307410976" duration="44000" />
+      <workItem from="1718307466870" duration="8934000" />
     </task>
     <servers />
   </component>
