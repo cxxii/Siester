@@ -55,7 +55,6 @@ public class Server {
 
         //message.process();
         //message.create();
-
         // begin pinging the hosts in the hostcache
 
 //        Handshake.pingHosts();
