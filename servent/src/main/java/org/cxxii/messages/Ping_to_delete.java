@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class Ping extends MessageAbstract {
+public class Ping_to_delete extends MessageAbstract {
 
     /**
      * A 16-byte string (GUID) uniquely identifying the
@@ -15,7 +15,7 @@ public class Ping extends MessageAbstract {
 
     /**
      * Indicates the type of message
-     * 0x00 = Ping
+     * 0x00 = Ping_to_delete
      */
     private final byte TYPE_ID = (byte) 0x00;
 
@@ -42,9 +42,7 @@ public class Ping extends MessageAbstract {
      */
     private final int PAYLOAD_LENGTH = 0;
 
-    public Ping(byte timeToLive, byte hops, int payloadLength, String payload, byte timeToLive1, byte hops1) {
-        super((byte) 0x00, timeToLive, hops, (byte) 0, null);
-    }
+
 
     public UUID getID() {
         return ID;
@@ -107,7 +105,7 @@ public class Ping extends MessageAbstract {
         // Write the UUID
         outputStream.write(convertUUID());
 
-        // Write the message type (Ping)
+        // Write the message type (Ping_to_delete)
         outputStream.write(getTYPE_ID());
 
         // Write the TTL

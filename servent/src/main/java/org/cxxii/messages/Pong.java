@@ -10,14 +10,14 @@ public class Pong implements MessageInterface_Delete {
      * A 16-byte string (GUID) uniquely identifying the
      * message on the network.
      *
-     * The Message ID of a Pong message MUST be the Message ID of the Ping
+     * The Message ID of a Pong message MUST be the Message ID of the Ping_to_delete
      * message it is sent in reply to
      */
     private byte[] pingID;
 
     /**
      * Indicates the type of message
-     * 0x00 = Ping
+     * 0x00 = Ping_to_delete
      */
     private static final byte TYPE_ID = (byte) 0x01;
 

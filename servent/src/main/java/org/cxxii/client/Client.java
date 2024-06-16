@@ -1,6 +1,6 @@
 package org.cxxii.client;
 
-import org.cxxii.messages.Ping;
+import org.cxxii.messages.Ping_to_delete;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,9 +10,9 @@ public class Client {
     String serverAddress = "localhost"; // Address of the server
     int port = 65432; // Port on which the server is listening
 
-//    Ping myping = new Ping();
+//    Ping_to_delete myping = new Ping_to_delete();
 
-    public static void start(Ping aping) throws IOException{
+    public static void start(Ping_to_delete aping) throws IOException{
         byte[] msg = aping.serializeMessage();
         for (byte b : msg) {
             System.out.print(Integer.toHexString(b & 0xFF) + " ");

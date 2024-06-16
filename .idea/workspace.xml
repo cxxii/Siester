@@ -4,21 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="">
+    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="intellij github pos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/servent/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Handshake.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Handshake.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Header.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/servent/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/Scratch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Payload.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Payload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageInterface_Delete.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageInterface_Delete.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/OldMessageParser_Delete.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/OldMessageParser_Delete.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping_to_delete.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Pong.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Pong.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Push.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PushMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Query.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHit.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHitMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/test/java/messages/parse/PingMessageParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/test/java/messages/parse/PingMessageParserTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,11 +191,41 @@
       <workItem from="1718137235272" duration="14062000" />
       <workItem from="1718285601605" duration="13905000" />
       <workItem from="1718307410976" duration="44000" />
-      <workItem from="1718307466870" duration="8934000" />
+      <workItem from="1718307466870" duration="43917000" />
     </task>
+    <task id="LOCAL-00001" summary="refactoring Pingmessages">
+      <option name="closed" value="true" />
+      <created>1718317744407</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718317744407</updated>
+    </task>
+    <task id="LOCAL-00002" summary="refactoring Pingmessages">
+      <option name="closed" value="true" />
+      <created>1718317775397</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1718317775397</updated>
+    </task>
+    <task id="LOCAL-00003" summary="intellij github pos">
+      <option name="closed" value="true" />
+      <created>1718318109107</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1718318109107</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactoring Pingmessages" />
+    <MESSAGE value="intellij github pos" />
+    <option name="LAST_COMMIT_MESSAGE" value="intellij github pos" />
   </component>
 </project>

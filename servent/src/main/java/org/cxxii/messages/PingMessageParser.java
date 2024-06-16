@@ -14,32 +14,26 @@ import java.util.Arrays;
 public class PingMessageParser implements MessageParser {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PingMessageParser.class);
+
+
+
+    // dont technically need a payload in ping parser
     @Override
-    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+    public PingMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
 
 
         LOGGER.info("Parse start");
-        byte[] id = Arrays.copyOfRange(header,0,15);
+        byte[] messageId = Arrays.copyOfRange(header, 0, 15);
         byte typeId = header[16];
-        byte ttl = header[17];
+        byte timeToLive = header[17];
         byte hops = header[18];
-        int payloadLength = ByteBuffer.wrap(Arrays.copyOfRange(header,19,23)).getInt();
+        byte payloadLength = ByteBuffer.wrap(Arrays.copyOfRange(header, 19, 23)).get();
 
-        LOGGER.debug("ID of ping received " + Arrays.toString(id));
+        LOGGER.debug("ID of ping received " + Arrays.toString(messageId));
 
-        PingMessage ping = new PingMessage(id, typeId, ttl, hops, payloadLength, payload);
+        PingMessage ping = new PingMessage(messageId, typeId, timeToLive, hops, payloadLength);
 
-
-
-        ping.process(id, typeId, ttl, hops, payloadLength, addr);
-
-
-
-
-
-        //delete below just to make run need to fix - shouldnt need to return anything here just pass to method -- change to void in this method and interface
-        MessageAbstract delete_me = new PingMessage();
-        return delete_me;
+        return ping.process(addr);
     }
 }
 

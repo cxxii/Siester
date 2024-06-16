@@ -49,7 +49,7 @@ public class PingMessageParserTest {
         Arrays.fill(id, (byte) 1); // Fill id with some data
         System.arraycopy(id, 0, header, 0, 15);
 
-        header[16] = 0x00; // TypeId for Ping
+        header[16] = 0x00; // TypeId for Ping_to_delete
         header[17] = 0x07; // TTL
         header[18] = 0x00; // Hops
         int payloadLength = 10;
@@ -106,7 +106,7 @@ public class PingMessageParserTest {
         Arrays.fill(id, (byte)1); // Fill id with some data
         System.arraycopy(id, 0, header, 0, 15);
 
-        header[16] = 0x00; // TypeId for Ping
+        header[16] = 0x00; // TypeId for Ping_to_delete
         header[17] = 0x07; // TTL
         header[18] = 0x00; // Hops
         int payloadLength = 10;
@@ -136,7 +136,7 @@ public class PingMessageParserTest {
         Arrays.fill(id, (byte)1); // Fill id with some data
         System.arraycopy(id, 0, header, 0, 15);
 
-        header[16] = 0x00; // TypeId for Ping
+        header[16] = 0x00; // TypeId for Ping_to_delete
         header[17] = 0x07; // TTL
         header[18] = 0x00; // Hops
         int payloadLength = 10;
@@ -166,7 +166,7 @@ public class PingMessageParserTest {
         Arrays.fill(id, (byte) 1); // Fill id with some data
         System.arraycopy(id, 0, header, 0, 15);
 
-        header[16] = 0x00; // TypeId for Ping
+        header[16] = 0x00; // TypeId for Ping_to_delete
         header[17] = 0x07; // TTL
         header[18] = 0x00; // Hops
         int payloadLength = 10;

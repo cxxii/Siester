@@ -66,7 +66,7 @@ public interface MessageInterface_Delete {
 
 //This class will contain common properties and methods shared by all message types, such as a header and payload.
 //It should define abstract methods for processing the message
-// , which concrete subclasses (Ping, Pong, Query) will implement.
+// , which concrete subclasses (Ping_to_delete, Pong, Query) will implement.
 
 
 
@@ -74,13 +74,13 @@ public interface MessageInterface_Delete {
 
 
 
-//An incoming Ping message with TTL = 1 and Hops = 0 or 1 is
+//An incoming Ping_to_delete message with TTL = 1 and Hops = 0 or 1 is
 //      used to probe the remote host of a connection, and MUST
 //      always be replied to with a pong having information about the
 //      host who received the ping.
 
-// An incoming Ping message with TTL = 2 and Hops = 0 is a
-//      "Crawler Ping" used to scan the network. It and SHOULD be
+// An incoming Ping_to_delete message with TTL = 2 and Hops = 0 is a
+//      "Crawler Ping_to_delete" used to scan the network. It and SHOULD be
 //      replied to with pongs containing information about the host
 //      receiving the ping and all other hosts it is connected to. The
 //      information about neighbour nodes can be provided either by

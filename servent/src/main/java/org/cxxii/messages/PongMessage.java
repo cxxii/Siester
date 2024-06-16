@@ -19,7 +19,7 @@ public class PongMessage extends MessageAbstract {
 
     // CONSTANTS
     private static final byte TYPE_ID = (byte) 0x01;
-    private static final int PAYLOAD_LENGTH = 13;
+    private static final byte PAYLOAD_LENGTH = (byte) 13;
     private static final byte[] PAYLOAD = null;
 
 
@@ -29,8 +29,7 @@ public class PongMessage extends MessageAbstract {
     private byte timeToLive;
     private byte hops;
     private int portNum;
-    private String ipAddress; //change to byte[]
-    private byte[] ipAddr; //change to byte[]
+    private byte[] ipAddress; //changed from to string to Inet
     private byte sharedFiles;
     private int kilobytesShared;
 
@@ -58,14 +57,29 @@ public class PongMessage extends MessageAbstract {
 
 
     // Cant rememeber why I have this ?
-    public PongMessage() {
-        super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH, null);
+//    public PongMessage() {
+//        super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH, null);
+//    }
+
+    // TODO - Stay consistent with ip type! need to change top to bottom
+
+    // should be used when replying to pings
+    public PongMessage(byte[] bytesMessageID, byte TYPE_ID, byte timeToLive, byte hops, byte payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
+        super(bytesMessageID, TYPE_ID, timeToLive, hops, payloadLength);
+        this.portNum = portNum;
+        this.ipAddress = ipAddress;
+        this.sharedFiles = sharedFiles;
+        this.kilobytesShared = kilobytesShared;
+    }
+
+    public PongMessage(byte typeId, byte timeToLive, byte hops, byte payloadLength) {
+        super(typeId, timeToLive, hops, payloadLength);
     }
 
 
-
-    public PongMessage(byte[] bytesMessageID, byte typeId, byte timeToLive, byte hops, int payloadLength, byte[] payload) {
-        super(bytesMessageID, typeId, timeToLive, hops, payloadLength, payload);
+    //remove
+    public PongMessage(byte ttl, byte hops, String ipAddress, int portNum, byte sharedFiles, int kilobytesShared, byte payloadLength) {
+        super();
     }
 
 
@@ -86,7 +100,7 @@ public class PongMessage extends MessageAbstract {
     }
 
     public byte[] getIpAddress() throws UnknownHostException {
-        InetAddress inetAddress = InetAddress.getByName(ipAddress);
+        InetAddress inetAddress = InetAddress.getByAddress(getIpAddress());
 
         return inetAddress.getAddress();
     }
@@ -101,7 +115,7 @@ public class PongMessage extends MessageAbstract {
 
 
 
-    public static void respond(byte[] pingID, byte ttl, byte hops, InetSocketAddress addr) throws IOException {
+    public static void respond(byte[] pingID, byte timeToLive, byte hops, InetSocketAddress addr) throws IOException {
 
         byte payloadLength = (byte) 13;
 
@@ -110,7 +124,15 @@ public class PongMessage extends MessageAbstract {
         byte sharedFiles = (byte) 66; // change to get from a saved data file
         int kbShared = 12354;
 
-        PongMessage pong = new PongMessage(pingID, TYPE_ID, ttl, hops, payloadLength, port, ip, sharedFiles, kbShared);
+        PongMessage pong = new PongMessage(pingID, TYPE_ID, timeToLive, hops, PAYLOAD_LENGTH, port, ip, sharedFiles, kbShared);
+
+        // PONG PAYLOAD
+        /**
+         * port
+         * ip shared
+         * files sharedd
+         * kb shared
+         */
 
 
         String ipy = addr.getAddress().getHostAddress();
@@ -141,7 +163,7 @@ public class PongMessage extends MessageAbstract {
         }
         outputStream.write(pingID);
 
-        // Write the message type (Ping)
+        // Write the message type (Ping_to_delete)
         outputStream.write(Byte.toUnsignedInt(TYPE_ID));
 
         // Write the TTL
@@ -174,16 +196,6 @@ public class PongMessage extends MessageAbstract {
         outputStream.write(Byte.toUnsignedInt(pong.getKilobytesShared()));
 
         return outputStream.toByteArray();
-    }
-
-    @Override
-    public void process() {
-        System.out.println("processing pong");
-
-    }
-
-    @Override
-    public void create() {
 
     }
 }

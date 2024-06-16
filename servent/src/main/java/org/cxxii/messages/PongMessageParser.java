@@ -15,12 +15,12 @@ public class PongMessageParser implements MessageParser {
         LOGGER.debug("PONG PARSE START");
         byte ttl = header[1];
         byte hops = header[2];
-        int payloadLength = header[3];
+        byte payloadLength = header[3];
 
-        String ipAddress = "127.0.0.1"; // Example static IP address, should parse from payload
-        int portNum = 12345; // Example static port number, should parse from payload
-        byte sharedFiles = (byte) 10; // Example static number of shared files, should parse from payload
-        int kilobytesShared = 2048; // Example static kilobytes shared, should parse from payload
+        String ipAddress = "127.0.0.1";
+        int portNum = 12345;
+        byte sharedFiles = (byte) 10;
+        int kilobytesShared = 2048;
 
         return new PongMessage(ttl, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
     }

@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.cxxii.utils.FileManager;
 import java.io.IOException;
 
+import static org.cxxii.messages.PingMessage.startPings;
+
 public class Server {
     private final static Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
