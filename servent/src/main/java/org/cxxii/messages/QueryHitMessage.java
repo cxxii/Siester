@@ -1,4 +1,4 @@
 package org.cxxii.messages;
 
-public class QueryHit {
+public class QueryHitMessage {
 }

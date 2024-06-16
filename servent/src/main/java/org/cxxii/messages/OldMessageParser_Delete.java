@@ -33,8 +33,8 @@ public class OldMessageParser_Delete {
 
 
         switch (payloadDescriptor) {
-            case 0x00: // Ping message received
-                LOGGER.info("Ping Received");
+            case 0x00: // Ping_to_delete message received
+                LOGGER.info("Ping_to_delete Received");
 //                Pong.processPingMessage(messageIDBytes, timeToLive, hops, payloadLength);
 //                processPingMessage(messageIDBytes);
 
