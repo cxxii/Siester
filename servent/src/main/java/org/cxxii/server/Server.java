@@ -15,6 +15,9 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
 
+        Config conf = loadConfigeration();
+        MessageFactoryImpl messageFactory = registerParsers();
+
         try {
             ServerListenerThread serverListenerThread = new ServerListenerThread(conf.getPort(), conf.getWebroot(), messageFactory);
             serverListenerThread.start();
@@ -22,6 +25,11 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
+
+        checkAndPingHosts();
+
 
 
     }
@@ -32,16 +40,18 @@ public class Server {
     }
 
 
-    public static void loadConfigeration() {
+    public static Config loadConfigeration() {
 
         ConfigManager.getInstance().loadConfigFile("src/main/resources/serverconfig.json");
         Config conf = ConfigManager.getInstance().getCurrentconfig();
+
         LOGGER.info("Using Port: " + conf.getPort());
         LOGGER.info("Using Webroot: " + conf.getWebroot());
 
+        return conf;
     }
 
-    public static void registerParsers() {
+    public static MessageFactoryImpl registerParsers() {
 
         MessageFactoryImpl messageFactory = new MessageFactoryImpl();
 
@@ -50,6 +60,8 @@ public class Server {
         messageFactory.setParser((byte) 0x40, new PushMessageParser());
         messageFactory.setParser((byte) 0x80, new QueryMessageParser());
         messageFactory.setParser((byte) 0x81, new QueryHitMessageParser());
+
+        return messageFactory;
     }
 
 

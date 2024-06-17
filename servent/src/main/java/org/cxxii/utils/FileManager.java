@@ -38,19 +38,19 @@ public class FileManager {
         }
     }
 
-    private static void checkAndCreateFile(File file) {
+    private static void checkAndCreateFile(File file) throws IOException {
         if (!file.exists()) {
-            if (file.mkdirs()) {
-                LOGGER.info("Created Dir: " + file.getAbsolutePath());
+            if (file.createNewFile()) {
+                LOGGER.info("Created file: " + file.getAbsolutePath());
             } else {
-                LOGGER.error("Failed to create dir: " + file.getAbsolutePath());
+                LOGGER.error("Failed to create file: " + file.getAbsolutePath());
             }
         } else {
-            LOGGER.info("Directory exists at " +  file.getAbsolutePath() );
+            LOGGER.info("Directory exists file " +  file.getAbsolutePath() );
         }
     }
 
-    public static void performFileChecks() {
+    public static void performFileChecks() throws IOException {
         LOGGER.info("Performing file checks");
 
         // Get directory
