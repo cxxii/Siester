@@ -35,7 +35,7 @@ public class PongMessage extends MessageAbstract {
 
         // Payload
     private int portNum;
-    private byte[] ipAddress; //changed from to string to Inet
+    private static byte[] ipAddress; //changed from to string to Inet
     private byte sharedFiles;
     private int kilobytesShared;
 
@@ -92,7 +92,7 @@ public class PongMessage extends MessageAbstract {
     }
 
 
-    public byte[] getIpAddress() {
+    public static byte[] getIpAddress() {
         return ipAddress;
     }
 
@@ -108,7 +108,7 @@ public class PongMessage extends MessageAbstract {
 
     // METHODS
 
-    public byte[] getMyIp() throws UnknownHostException {
+    public static byte[] getMyIp() throws UnknownHostException {
         InetAddress inetAddress = InetAddress.getByAddress(getIpAddress());
 
         return inetAddress.getAddress();
@@ -120,7 +120,7 @@ public class PongMessage extends MessageAbstract {
         byte payloadLength = (byte) 13;
 
         int port = 8282; // change this to read from the conif file
-        byte[] ip = this.getMyIp(); // FIXME! Drama... need to config from the holepunch i think????
+        byte[] ip = {45,42,62,66}; // FIXME! Drama... need to config from the holepunch i think????
         byte sharedFiles = (byte) 66; // change to get from a saved data file
         int kbShared = 12354;
 
