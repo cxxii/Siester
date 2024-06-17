@@ -14,29 +14,34 @@ public class Server {
     private final static Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws IOException {
-
-        Config conf = loadConfigeration();
-        MessageFactoryImpl messageFactory = registerParsers();
-
         try {
-            ServerListenerThread serverListenerThread = new ServerListenerThread(conf.getPort(), conf.getWebroot(), messageFactory);
-            serverListenerThread.start();
+
+            // Loads config file
+            loadConfigeration();
+
+            // Performs file checks
+            FileManager.performFileChecks();
+
+            // Starts serever
+            startServer();
+
+            // check host caches etc
+            checkAndPingHosts();
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-
-        checkAndPingHosts();
-
-
-
     }
 
-    public static void startServer() {
+    public static void startServer() throws IOException {
         Config config = ConfigManager.getInstance().getCurrentconfig();
+        MessageFactoryImpl messageFactory = new MessageFactoryImpl();
 
+        registerParsers(messageFactory);
+
+        ServerListenerThread serverListenerThread = new ServerListenerThread(config.getPort(), config.getWebroot(), messageFactory);
+        serverListenerThread.start();
     }
 
 
@@ -51,9 +56,8 @@ public class Server {
         return conf;
     }
 
-    public static MessageFactoryImpl registerParsers() {
 
-        MessageFactoryImpl messageFactory = new MessageFactoryImpl();
+    public static MessageFactoryImpl registerParsers(MessageFactoryImpl messageFactory) {
 
         messageFactory.setParser((byte) 0x00, new PingMessageParser());
         messageFactory.setParser((byte) 0x01, new PongMessageParser());
