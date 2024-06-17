@@ -21,6 +21,7 @@ public class FileManager {
     private static final String PONG_DIRECTORY = "siester/clientpongs";
     private static final String HOST_CACHE = "hostCache.json";
     private static final String PONG_CACHE = "pongCache.json";
+    private static final String HOST_DETAILS = "hostDetails.json";
     private static final String USER_HOME = System.getProperty("user.home");
 
 
@@ -59,7 +60,15 @@ public class FileManager {
         } else {
             LOGGER.info("Pong cache file found: " + pongCacheFile.getAbsolutePath());
         }
+
+        File hostDetails = new File(mainDirectory, HOST_DETAILS);
+        if (!hostDetails.exists()) {
+            createFile(hostCacheFile);
+        } else {
+            LOGGER.info("Host Details file found: " + pongCacheFile.getAbsolutePath());
+        }
     }
+
 
     public static long checkHostCacheSize() throws IOException {
 
@@ -80,6 +89,7 @@ public class FileManager {
         }
     }
 
+
     private static void createFile(File file) {
         try {
             if (file.createNewFile()) {
@@ -92,7 +102,6 @@ public class FileManager {
             throw new RuntimeException("Error creating file: " + file.getAbsolutePath(), e);
         }
     }
-
 
 
     public static void writeHostsToFile(InputStream inputStream) throws IOException {

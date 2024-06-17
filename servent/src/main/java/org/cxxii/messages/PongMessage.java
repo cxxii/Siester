@@ -12,6 +12,9 @@ import java.util.Arrays;
 
 public class PongMessage extends MessageAbstract {
 
+    // TODO:
+    //  Stay consistent with ip type! need to change top to bottom
+
 
     // LOGGER
     private final static Logger LOGGER = LoggerFactory.getLogger(PongMessage.class);
@@ -24,10 +27,13 @@ public class PongMessage extends MessageAbstract {
 
 
     // INSTANCE
+        // HEADERS
     private byte[] pingID; //byte array as it wont be converted back to uuid
     private int PayloadLength;
     private byte timeToLive;
     private byte hops;
+
+        // Payload
     private int portNum;
     private byte[] ipAddress; //changed from to string to Inet
     private byte sharedFiles;
@@ -35,35 +41,18 @@ public class PongMessage extends MessageAbstract {
 
 
     // CONSTRUCTORS
-
-//    public PongMessage(byte[] id, byte typeID, byte ttl, byte hops, byte payloadLength, int port, byte[] ip, byte sharedFiles, int kbShared) {
-//        this.pingID = id;
-//        this.timeToLive = ttl;
-//        this.hops = hops;
-//        this.ipAddr= ip;
-//        this.portNum = port;
-//        this.sharedFiles = sharedFiles;
-//        this.kilobytesShared = kbShared;
-//        this.payloadLength = payloadLength;
-//    }
-
-//    public PongMessage(byte timeToLive, byte hops, String ipAddress, int portNum, byte sharedFiles, int kilobytesShared, int payloadLength) {
-//        this.ipAddress = ipAddress;
-//        this.portNum = portNum;
-//        this.sharedFiles = sharedFiles;
-//        this.kilobytesShared = kilobytesShared;
-//        this.payloadLength = payloadLength;
-//    }
-
-
-    // Cant rememeber why I have this ?
-//    public PongMessage() {
-//        super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH, null);
-//    }
-
-    // TODO - Stay consistent with ip type! need to change top to bottom
-
-    // should be used when replying to pings
+    /**
+     * Use for replying to pings
+     * @param bytesMessageID
+     * @param TYPE_ID
+     * @param timeToLive
+     * @param hops
+     * @param payloadLength
+     * @param portNum
+     * @param ipAddress
+     * @param sharedFiles
+     * @param kilobytesShared
+     */
     public PongMessage(byte[] bytesMessageID, byte TYPE_ID, byte timeToLive, byte hops, byte payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
         super(bytesMessageID, TYPE_ID, timeToLive, hops, payloadLength);
         this.portNum = portNum;
@@ -72,18 +61,21 @@ public class PongMessage extends MessageAbstract {
         this.kilobytesShared = kilobytesShared;
     }
 
+    //usage?
     public PongMessage(byte typeId, byte timeToLive, byte hops, byte payloadLength) {
         super(typeId, timeToLive, hops, payloadLength);
     }
 
 
-    //remove
+    //To be removed..
     public PongMessage(byte ttl, byte hops, String ipAddress, int portNum, byte sharedFiles, int kilobytesShared, byte payloadLength) {
         super();
     }
 
 
     //GETTR N SETTR
+
+    //remove
     private static byte[] getIp() throws UnknownHostException {
         InetAddress localHost = InetAddress.getLocalHost();
 
@@ -99,10 +91,9 @@ public class PongMessage extends MessageAbstract {
         return (byte) portNum;
     }
 
-    public byte[] getIpAddress() throws UnknownHostException {
-        InetAddress inetAddress = InetAddress.getByAddress(getIpAddress());
 
-        return inetAddress.getAddress();
+    public byte[] getIpAddress() {
+        return ipAddress;
     }
 
     public byte getSharedFiles() {
@@ -115,24 +106,25 @@ public class PongMessage extends MessageAbstract {
 
 
 
+    // METHODS
+
+    public byte[] getMyIp() throws UnknownHostException {
+        InetAddress inetAddress = InetAddress.getByAddress(getIpAddress());
+
+        return inetAddress.getAddress();
+    }
+
+
     public static void respond(byte[] pingID, byte timeToLive, byte hops, InetSocketAddress addr) throws IOException {
 
         byte payloadLength = (byte) 13;
 
         int port = 8282; // change this to read from the conif file
-        byte[] ip = getIp();
+        byte[] ip = this.getMyIp(); // FIXME! Drama... need to config from the holepunch i think????
         byte sharedFiles = (byte) 66; // change to get from a saved data file
         int kbShared = 12354;
 
         PongMessage pong = new PongMessage(pingID, TYPE_ID, timeToLive, hops, PAYLOAD_LENGTH, port, ip, sharedFiles, kbShared);
-
-        // PONG PAYLOAD
-        /**
-         * port
-         * ip shared
-         * files sharedd
-         * kb shared
-         */
 
 
         String ipy = addr.getAddress().getHostAddress();
