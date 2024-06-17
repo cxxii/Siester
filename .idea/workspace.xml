@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="pingMessage refactored">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +52,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "ping__refactor",
+    "git-widget-placeholder": "file__manager__refactor",
     "last_opened_file_path": "/Users/callum/Documents/Coding/repos/siester",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -61,7 +62,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.44899738",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.toDoOptions",
+    "settings.editor.selected.configurable": "editing.templates",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -178,6 +179,7 @@
       <workItem from="1718285601605" duration="13905000" />
       <workItem from="1718307410976" duration="44000" />
       <workItem from="1718307466870" duration="54949000" />
+      <workItem from="1718641891179" duration="5808000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -230,5 +232,9 @@
     <MESSAGE value="intellij github pos" />
     <MESSAGE value="pingMessage refactored" />
     <option name="LAST_COMMIT_MESSAGE" value="pingMessage refactored" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

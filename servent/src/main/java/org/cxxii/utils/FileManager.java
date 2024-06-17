@@ -12,18 +12,43 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileManager {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FileManager.class);
 
     private static final String DIRECTORY_NAME = "siester";
-    private static final String PONG_DIRECTORY = "siester/clientpongs";
-    private static final String HOST_CACHE = "hostCache.json";
-    private static final String PONG_CACHE = "pongCache.json";
-    private static final String HOST_DETAILS = "hostDetails.json";
+    private static final String PONG_DIRECTORY = "ClientPongs";
+    private static final String HOST_CACHE = "host_cache.json";
+    private static final String PONG_CACHE = "pong_cache.json";
+    private static final String HOST_DETAILS = "host_details.json";
     private static final String USER_HOME = System.getProperty("user.home");
 
+    private static void checkAndCreateDir(File directory) {
+        if (!directory.exists()) {
+            if (directory.mkdirs()) {
+                LOGGER.info("Created Dir: " + directory.getAbsolutePath());
+            } else {
+                LOGGER.error("Failed to create dir: " + directory.getAbsolutePath());
+            }
+        } else {
+            LOGGER.info("Directory exists at " +  directory.getAbsolutePath() );
+        }
+    }
+
+    private static void checkAndCreateFile(File file) {
+        if (!file.exists()) {
+            if (file.mkdirs()) {
+                LOGGER.info("Created Dir: " + file.getAbsolutePath());
+            } else {
+                LOGGER.error("Failed to create dir: " + file.getAbsolutePath());
+            }
+        } else {
+            LOGGER.info("Directory exists at " +  file.getAbsolutePath() );
+        }
+    }
 
     public static void performFileChecks() {
         LOGGER.info("Performing file checks");
@@ -32,43 +57,17 @@ public class FileManager {
         File mainDirectory = new File(USER_HOME, DIRECTORY_NAME);
         File pongDirectory = new File(USER_HOME, PONG_DIRECTORY);
 
-        // Check directory
-        if (!mainDirectory.exists()) {
-            createDirectory(mainDirectory);
-        } else {
-            LOGGER.info("Directory already exists: " + mainDirectory.getAbsolutePath());
-        }
 
-        if (!pongDirectory.exists()) {
-            createDirectory(pongDirectory);
-        } else {
-            LOGGER.info("Directory already exists: " + pongDirectory.getAbsolutePath());
-        }
+        // Checks n Creates Dir
+        checkAndCreateDir(mainDirectory);
+        checkAndCreateDir(pongDirectory);
 
-        // Check host cache file
-        File hostCacheFile = new File(mainDirectory, HOST_CACHE);
-        if (!hostCacheFile.exists()) {
-            createFile(hostCacheFile);
-        } else {
-            LOGGER.info("Host cache file found: " + hostCacheFile.getAbsolutePath());
-        }
+        // Checks n Creates Files
+        checkAndCreateFile(new File(mainDirectory, HOST_CACHE));
+        checkAndCreateFile(new File(mainDirectory, PONG_CACHE));
+        checkAndCreateFile(new File(mainDirectory, HOST_DETAILS));
 
-        // Check pong cache file
-        File pongCacheFile = new File(mainDirectory, PONG_CACHE);
-        if (!pongCacheFile.exists()) {
-            createFile(pongCacheFile);
-        } else {
-            LOGGER.info("Pong cache file found: " + pongCacheFile.getAbsolutePath());
-        }
-
-        File hostDetails = new File(mainDirectory, HOST_DETAILS);
-        if (!hostDetails.exists()) {
-            createFile(hostCacheFile);
-        } else {
-            LOGGER.info("Host Details file found: " + pongCacheFile.getAbsolutePath());
-        }
     }
-
 
     public static long checkHostCacheSize() throws IOException {
 
@@ -77,32 +76,9 @@ public class FileManager {
     }
 
     public static Path getHostCachePath() {
+
         return Paths.get(USER_HOME, DIRECTORY_NAME, HOST_CACHE);
     }
-
-    private static void createDirectory(File directory) {
-        if (directory.mkdirs()) {
-            LOGGER.info("Directory created: " + directory.getAbsolutePath());
-        } else {
-            LOGGER.error("Failed to create directory: " + directory.getAbsolutePath());
-            throw new RuntimeException("Failed to create required directory. Please create it manually: " + directory.getAbsolutePath());
-        }
-    }
-
-
-    private static void createFile(File file) {
-        try {
-            if (file.createNewFile()) {
-                LOGGER.info("File created: " + file.getAbsolutePath());
-            } else {
-                LOGGER.error("File already exists (unexpected): " + file.getAbsolutePath());
-            }
-        } catch (IOException e) {
-            LOGGER.error("Error creating file: " + file.getAbsolutePath(), e);
-            throw new RuntimeException("Error creating file: " + file.getAbsolutePath(), e);
-        }
-    }
-
 
     public static void writeHostsToFile(InputStream inputStream) throws IOException {
 
