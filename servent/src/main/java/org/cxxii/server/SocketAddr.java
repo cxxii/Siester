@@ -6,7 +6,7 @@ import java.net.SocketAddress;
 
 //TODO Fix the socketarr refs
 
-public class SocketAddr extends InetSocketAddress {
+public class SocketAddr{
     private final InetAddress ip;
     private final int port;
 

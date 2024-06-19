@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -15,30 +16,43 @@ public class FileManager {
     private final static Logger LOGGER = LoggerFactory.getLogger(FileManager.class);
 
     private static final String DIRECTORY_NAME = "siester";
-    private static final String PONG_DIRECTORY = "ClientPongs";
+    private static final String PONG_DIRECTORY = "siester/node_pongs";
+    private static final String HOST_DIRECTORY = "siester/host";
+    private static final String LOG_DIRECTORY = "siester/logs";
     private static final String HOST_CACHE = "host_cache.json";
     private static final String PONG_CACHE = "pong_cache.json";
     private static final String HOST_DETAILS = "host_details.json";
+    private static final String LOG_DETAILS = "logs.txt";
     private static final String USER_HOME = System.getProperty("user.home");
+
+    static {
+        System.setProperty("LOG_FILE", USER_HOME + File.separator + "logs" + File.separator + "application.log");
+    }
 
     private static void checkAndCreateDir(File directory) {
         if (!directory.exists()) {
-            if (directory.mkdirs()) {
-                LOGGER.info("Created Dir: " + directory.getAbsolutePath());
-            } else {
-                LOGGER.error("Failed to create dir: " + directory.getAbsolutePath());
+            try {
+                if (directory.mkdir()) {
+                    LOGGER.info("Created dir: " + directory.getAbsolutePath());
+                }
+            } catch (SecurityException e) {
+                LOGGER.error("Failed to make dir: " + directory.getAbsolutePath(), e);
+                throw new RuntimeException("ERROR while creating dir: " + directory.getAbsolutePath(), e);
             }
         } else {
             LOGGER.info("Directory exists at " +  directory.getAbsolutePath() );
         }
     }
 
-    private static void checkAndCreateFile(File file) throws IOException {
+    private static void checkAndCreateFile(File file) {
         if (!file.exists()) {
-            if (file.createNewFile()) {
-                LOGGER.info("Created file: " + file.getAbsolutePath());
-            } else {
-                LOGGER.error("Failed to create file: " + file.getAbsolutePath());
+            try {
+                if (file.createNewFile()) {
+                    LOGGER.info("Created file: " + file.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                LOGGER.error("Failed to make file: " + file.getAbsolutePath(), e);
+                throw new RuntimeException("ERROR while creating file: " + file.getAbsolutePath(), e);
             }
         } else {
             LOGGER.info("Directory exists file " +  file.getAbsolutePath() );
@@ -51,34 +65,45 @@ public class FileManager {
         // Get directory
         File mainDirectory = new File(USER_HOME, DIRECTORY_NAME);
         File pongDirectory = new File(USER_HOME, PONG_DIRECTORY);
+        File hostDirectory = new File(USER_HOME, HOST_DIRECTORY);
+        File logDirectory = new File(USER_HOME, LOG_DIRECTORY);
 
 
         // Checks n Creates Dir
         checkAndCreateDir(mainDirectory);
         checkAndCreateDir(pongDirectory);
+        checkAndCreateDir(hostDirectory);
+        checkAndCreateDir(logDirectory);
 
         // Checks n Creates Files
-        checkAndCreateFile(new File(mainDirectory, HOST_CACHE));
+        checkAndCreateFile(new File(hostDirectory, HOST_CACHE));
         checkAndCreateFile(new File(mainDirectory, PONG_CACHE));
         checkAndCreateFile(new File(mainDirectory, HOST_DETAILS));
+        checkAndCreateFile(new File(logDirectory, LOG_DETAILS));
 
     }
 
     public static long checkHostCacheSize() throws IOException {
-
-        return Files.size(getHostCachePath());
-
+        return Files.size(getPath(HOST_DIRECTORY, HOST_CACHE));
     }
 
     public static Path getHostCachePath() {
-
-        return Paths.get(USER_HOME, DIRECTORY_NAME, HOST_CACHE);
+        return getPath(HOST_DIRECTORY, HOST_CACHE);
     }
 
-    public static String getHostDetailsPath() {
-
-        return Paths.get(USER_HOME, DIRECTORY_NAME, HOST_DETAILS);
+    public static Path getHostDetailsPath() {
+        return getPath(DIRECTORY_NAME, HOST_DETAILS);
     }
+
+    public static Path getNodePongDirPath() {
+        return getPath(DIRECTORY_NAME, PONG_DIRECTORY);
+    }
+
+    private static Path getPath(String directory, String fileName) {
+        return Paths.get(USER_HOME, directory, fileName);
+    }
+
+
 
 
     public static void writeHostsToFile(InputStream inputStream) throws IOException {

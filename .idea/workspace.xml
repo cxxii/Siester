@@ -4,18 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="server refactor - classpath used now">
+    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="finalising ping pong messaging">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/ConnectionWorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/ConnectionWorkerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/SocketAddr.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/SocketAddr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/config/ConfigManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/config/ConfigManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/Json.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/Json.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,7 +183,8 @@
       <workItem from="1718307466870" duration="54949000" />
       <workItem from="1718641891179" duration="10540000" />
       <workItem from="1718718836432" duration="8352000" />
-      <workItem from="1718754399353" duration="15695000" />
+      <workItem from="1718754399353" duration="16737000" />
+      <workItem from="1718819550303" duration="5747000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -255,7 +250,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718701739257</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="finalising ping pong messaging">
+      <option name="closed" value="true" />
+      <created>1718816496428</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1718816496428</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,7 +272,8 @@
     <MESSAGE value="Server  class updated" />
     <MESSAGE value="updated file manager test" />
     <MESSAGE value="server refactor - classpath used now" />
-    <option name="LAST_COMMIT_MESSAGE" value="server refactor - classpath used now" />
+    <MESSAGE value="finalising ping pong messaging" />
+    <option name="LAST_COMMIT_MESSAGE" value="finalising ping pong messaging" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

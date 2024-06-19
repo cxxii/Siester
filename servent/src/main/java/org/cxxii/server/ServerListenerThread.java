@@ -38,9 +38,8 @@ public class ServerListenerThread extends Thread {
 
                 ConnectionWorkerThread workerThread = new ConnectionWorkerThread(socket, messageFactory);
                 workerThread.start();
-
-
             }
+
         } catch (IOException e) {
             LOGGER.info("Problem with setting socket", e);
         } finally {

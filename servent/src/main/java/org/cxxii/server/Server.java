@@ -31,6 +31,8 @@ public class Server {
             // check host caches etc
             checkAndPingHosts(); // OK
 
+            pro
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -77,6 +79,7 @@ public class Server {
 
 
     // BUG - Doesnt ping bootstrap but cant read cache becasue is null? size is now 1B before it was 0??
+    // BUG - FIXED?
     public static void checkAndPingHosts() throws IOException {
 
         if (FileManager.checkHostCacheSize() == 0) {

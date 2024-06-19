@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -160,18 +161,11 @@ public class PingMessage extends MessageAbstract {
             }
     }
 
-    private static boolean checkHostInCache(InetSocketAddress addr) {
-        List<SocketAddr> hosts = readHostCache();
+    private static boolean checkHostInCache(int port, InetAddress addr) {
+        List<SocketAddr> sockets = readHostCache();
 
-        for (SocketAddr socketAddr :hosts) {
-            if (addr.getAddress()  socketAddr && addr.getPort()
-
-        }
-    }
-
-    private static boolean searchForPort(List<SocketAddr> sockets, int port, InetSocketAddress addr) {
         for (SocketAddr socket : sockets) {
-            if (socket.getIp().equals(addr) &&  socket.getPort() == port) {
+            if (socket.getIp().equals(addr) && socket.getPort() == port) {
                 return true;
             }
         }
@@ -179,9 +173,6 @@ public class PingMessage extends MessageAbstract {
         return false;
     }
 
-    private static void searchForIp(SocketAddr sockets, InetSocketAddress ip) {
-
-    }
 
 
     //public void process(byte[] messageID, byte typeId, byte timeToLive, byte hops, byte payloadLength, InetSocketAddress addr) throws IOException {
@@ -192,10 +183,10 @@ public class PingMessage extends MessageAbstract {
             this.setHops((byte) (this.getTimeToLive () - 1));
             this.setHops((byte) (this.getHops () + 1));
 
+
             // save host to cache
             // check if in file first
-
-            if (!hostInCache(addr)) {
+            if (!checkHostInCache(addr.getPort(), addr.getAddress())) {
                 Json.appendToHostCacheJson(addr);
             }
 

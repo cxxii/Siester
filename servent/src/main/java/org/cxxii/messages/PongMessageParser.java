@@ -12,6 +12,7 @@ public class PongMessageParser implements MessageParser {
     private final static Logger LOGGER = LoggerFactory.getLogger(PongMessageParser.class);
     @Override
     public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+
         LOGGER.debug("PONG PARSE START");
         byte ttl = header[1];
         byte hops = header[2];
@@ -22,6 +23,12 @@ public class PongMessageParser implements MessageParser {
         byte sharedFiles = (byte) 10;
         int kilobytesShared = 2048;
 
-        return new PongMessage(ttl, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
+        PongMessage pong = new PongMessage(ttl, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
+
+        return pong.process(addr);
     }
 }
+
+/**
+ * Does this method need to actually return anything
+ */

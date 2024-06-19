@@ -42,8 +42,7 @@ public class ConnectionWorkerThread extends Thread {
 
             InetSocketAddress socketAddr = new InetSocketAddress(inetAddress, port);
 
-            MessageAbstract message = messageFactory.read(inputStream, socketAddr);
-
+            MessageAbstract message = messageFactory.read(inputStream, socketAddr); // early code this has changed the way its used
 
             //TODO we would read
 

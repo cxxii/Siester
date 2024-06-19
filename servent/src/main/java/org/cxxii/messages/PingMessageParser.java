@@ -18,6 +18,7 @@ public class PingMessageParser implements MessageParser {
 
 
     // dont technically need a payload in ping parser
+
     @Override
     public PingMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
 

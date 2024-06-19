@@ -92,7 +92,6 @@ public class PongMessage extends MessageAbstract {
         return (byte) portNum;
     }
 
-
     public static byte[] getIpAddress() {
         return ipAddress;
     }
@@ -177,6 +176,29 @@ public class PongMessage extends MessageAbstract {
         buffer.putInt(this.getKilobytesShared());
 
         return buffer.array();
+    }
+
+    public PongMessage process(InetSocketAddress addr){
+
+        String filename =  addr.getHostString() + addr.getPort();
+
+
+
+        File
+        FileManager.getNodePongDirPath()
+
+
+        //get the Ip and port as string
+        // check if this exists in the file systems
+        // no - use that to create file name
+        // yes - overwrite oldest bit of info if there is less than 10 pong infomation (also add date time its written)
+
+
+
+
+
+
+        return 0;
     }
 
 
