@@ -32,8 +32,6 @@ public class ConnectionWorkerThread extends Thread {
         OutputStream outputStream = null;
         InputStream inputStream = null;
 
-
-
         try {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();

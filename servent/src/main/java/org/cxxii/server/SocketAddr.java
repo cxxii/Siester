@@ -1,11 +1,12 @@
 package org.cxxii.server;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 //TODO Fix the socketarr refs
 
-public class SocketAddr extends SocketAddress {
+public class SocketAddr extends InetSocketAddress {
     private final InetAddress ip;
     private final int port;
 

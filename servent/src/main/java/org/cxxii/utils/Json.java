@@ -2,7 +2,18 @@ package org.cxxii.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
-import java.io.IOException;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import net.bytebuddy.description.method.MethodDescription;
+import org.cxxii.server.Server;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Json {
 
@@ -42,6 +53,46 @@ public class Json {
         }
 
         return objectWriter.writeValueAsString(o);
+    }
+
+    public static JsonObject readJsonFromFile(String filePath) throws IOException {
+        try (FileReader reader = new FileReader(filePath)) {
+            return JsonParser.parseReader(reader).getAsJsonObject();
+        }
+    }
+
+    public static void appendToHostCacheJson(InetSocketAddress address) throws IOException {
+        final String FILE_PATH = String.valueOf(FileManager.getHostCachePath());
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Type listType = new TypeToken<List<Socket>>() {}.getType();
+
+        List<Socket> sockets;
+        try (FileReader reader = new FileReader(FILE_PATH)) {
+            JsonElement jsonElement = JsonParser.parseReader(reader);
+            if (jsonElement.isJsonArray()) {
+                sockets = gson.fromJson(jsonElement, listType);
+            } else {
+                sockets = new ArrayList<>();
+            }
+        }
+
+        Socket newSocket = new Socket(address.getAddress(), address.getPort());
+        sockets.add(newSocket);
+
+        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+            gson.toJson(sockets, writer);
+        }
+    }
+
+    public static JsonObject readJsonFromClasspath(String classpath) throws IOException {
+        try (InputStream inputStream = Server.class.getClassLoader().getResourceAsStream(classpath);
+             Reader reader = new InputStreamReader(inputStream)) {
+            if (inputStream == null) {
+                throw new FileNotFoundException(classpath + " not found in classpath");
+            }
+            return JsonParser.parseReader(reader).getAsJsonObject();
+        }
     }
 
 }

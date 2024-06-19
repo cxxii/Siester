@@ -6,7 +6,10 @@ import org.cxxii.server.config.ConfigManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.cxxii.utils.FileManager;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static org.cxxii.messages.PingMessage.startPings;
 
@@ -17,16 +20,16 @@ public class Server {
         try {
 
             // Loads config file
-            loadConfigeration();
+            loadConfiguration(); // OK
 
             // Performs file checks
-            FileManager.performFileChecks();
+            FileManager.performFileChecks(); // OK
 
             // Starts serever
-            startServer();
+            startServer(); // OK
 
             // check host caches etc
-            checkAndPingHosts();
+            checkAndPingHosts(); // OK
 
 
         } catch (IOException e) {
@@ -36,7 +39,7 @@ public class Server {
 
     public static void startServer() throws IOException {
         Config config = ConfigManager.getInstance().getCurrentconfig();
-        MessageFactoryImpl messageFactory = new MessageFactoryImpl();
+        MessageFactoryImpl messageFactory =  new MessageFactoryImpl();
 
         registerParsers(messageFactory);
 
@@ -44,16 +47,20 @@ public class Server {
         serverListenerThread.start();
     }
 
-
-    public static Config loadConfigeration() {
-
-        ConfigManager.getInstance().loadConfigFile("src/main/resources/serverconfig.json");
-        Config conf = ConfigManager.getInstance().getCurrentconfig();
-
-        LOGGER.info("Using Port: " + conf.getPort());
-        LOGGER.info("Using Webroot: " + conf.getWebroot());
-
-        return conf;
+    public static void loadConfiguration() {
+        ConfigManager configManager = ConfigManager.getInstance();
+        try (InputStream inputStream = Server.class.getClassLoader().getResourceAsStream("serverconfig.json")) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("serverconfig.json not found in classpath");
+            }
+            configManager.loadConfigFile(inputStream);
+            Config conf = configManager.getCurrentconfig();
+            LOGGER.info("Using Port: " + conf.getPort());
+            LOGGER.info("Using Webroot: " + conf.getWebroot());
+        } catch (IOException e) {
+            LOGGER.error("Failed to load configuration", e);
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -69,6 +76,7 @@ public class Server {
     }
 
 
+    // BUG - Doesnt ping bootstrap but cant read cache becasue is null? size is now 1B before it was 0??
     public static void checkAndPingHosts() throws IOException {
 
         if (FileManager.checkHostCacheSize() == 0) {

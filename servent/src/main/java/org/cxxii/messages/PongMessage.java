@@ -1,13 +1,20 @@
 package org.cxxii.messages;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.cxxii.network.Network;
+import org.cxxii.server.Server;
+import org.cxxii.server.config.Config;
+import org.cxxii.utils.FileManager;
+import org.cxxii.utils.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 public class PongMessage extends MessageAbstract {
@@ -22,6 +29,7 @@ public class PongMessage extends MessageAbstract {
 
     // CONSTANTS
     private static final byte TYPE_ID = (byte) 0x01;
+    public static final int HEADER_LENGTH = 23;
     private static final byte PAYLOAD_LENGTH = (byte) 13;
     private static final byte[] PAYLOAD = null;
 
@@ -75,13 +83,6 @@ public class PongMessage extends MessageAbstract {
 
     //GETTR N SETTR
 
-    //remove
-    private static byte[] getIp() throws UnknownHostException {
-        InetAddress localHost = InetAddress.getLocalHost();
-
-        return localHost.getAddress();
-    }
-
 
     public byte[] getPingID() {
         return pingID;
@@ -107,87 +108,87 @@ public class PongMessage extends MessageAbstract {
 
 
     // METHODS
+    public static void respond(byte[] pingID, byte timeToLive, byte hops, InetSocketAddress addr) {
+        try {
+            // Load shared files and KB shared from host details
+            JsonObject hostDetails = Json.readJsonFromFile(FileManager.getHostDetailsPath().toString());
+            byte sharedFiles = hostDetails.get("sharedFiles").getAsByte();
+            int kbShared = hostDetails.get("kbShared").getAsInt();
 
-    public static byte[] getMyIp() throws UnknownHostException {
-        InetAddress inetAddress = InetAddress.getByAddress(getIpAddress());
+            // Load port and IP from server configuration
+            JsonObject serverConfig = Json.readJsonFromClasspath("serverconfig.json");
+            int port = serverConfig.get("port").getAsInt();
+            byte[] ip = Network.getLocalIpAddress();
 
-        return inetAddress.getAddress();
+            // Create Pong message
+            PongMessage pong = new PongMessage(pingID, TYPE_ID, timeToLive, hops, PAYLOAD_LENGTH, port, ip, sharedFiles, kbShared);
+
+            // Send Pong message
+            sendPongMessage(pong, addr);
+        } catch (IOException e) {
+            LOGGER.error("Error responding to ping", e);
+        }
     }
 
+    private static void sendPongMessage(PongMessage pong, InetSocketAddress addr) {
+        String ip = addr.getAddress().getHostAddress();
+        int port = addr.getPort();
+        LOGGER.debug("TRYING TO SEND TO " + ip + " " + port);
 
-    public static void respond(byte[] pingID, byte timeToLive, byte hops, InetSocketAddress addr) throws IOException {
+        try (Socket socket = new Socket(ip, port);
+             OutputStream outputStream = socket.getOutputStream()) {
 
-        byte payloadLength = (byte) 13;
+            outputStream.write(pong.serializeMessage());
+            outputStream.flush();
 
-        int port = 8282; // change this to read from the conif file
-        byte[] ip = {45,42,62,66}; // FIXME! Drama... need to config from the holepunch i think????
-        byte sharedFiles = (byte) 66; // change to get from a saved data file
-        int kbShared = 12354;
-
-        PongMessage pong = new PongMessage(pingID, TYPE_ID, timeToLive, hops, PAYLOAD_LENGTH, port, ip, sharedFiles, kbShared);
-
-
-        String ipy = addr.getAddress().getHostAddress();
-
-        //int porty = addr.getPort();
-        int porty = 8080; // debugging keep above
-
-
-
-        LOGGER.debug("TRYING TO SEND TO " + ipy + " " + porty);
-
-        Socket socket = new Socket(ipy,porty);
-
-        OutputStream outputStream = socket.getOutputStream();
-
-        outputStream.write(pong.serializeMessage(pong));
-
-
+        } catch (IOException e) {
+            LOGGER.error("Failed to send Pong message to " + ip + ":" + port, e);
+        }
     }
 
-    public byte[] serializeMessage(PongMessage pong) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        // Write the ping id back
-        byte[] pingID = pong.getPingID();
-        if (pingID == null) {
+    public byte[] serializeMessage() throws IOException {
+        if (this.getPingID() == null) {
             throw new NullPointerException("pingID is null");
         }
-        outputStream.write(pingID);
-
-        // Write the message type (Ping_to_delete)
-        outputStream.write(Byte.toUnsignedInt(TYPE_ID));
-
-        // Write the TTL
-        outputStream.write(Byte.toUnsignedInt(pong.getTimeToLive()));
-
-        // Write the Hops
-        outputStream.write(Byte.toUnsignedInt(pong.getHops()));
-
-        // Write the payload length (4 bytes, big-endian)
-        ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
-        lengthBuffer.putInt(pong.getPayloadLength());
-        outputStream.write(lengthBuffer.array());
-
-        // Write the port number
-        outputStream.write(Byte.toUnsignedInt(pong.getPortNum()));
-
-        // Write the IP address
-        byte[] ipAddressBytes = pong.getIpAddress();
-        if (ipAddressBytes == null) {
+        if (this.getIpAddress() == null) {
             throw new NullPointerException("ipAddressBytes is null");
         }
-        ByteBuffer ipBuffer = ByteBuffer.allocate(4);
-        ipBuffer.put(ipAddressBytes);
-        outputStream.write(ipBuffer.array());
 
-        // Write the number of shared files
-        outputStream.write(Byte.toUnsignedInt(pong.getSharedFiles()));
+        ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + PAYLOAD_LENGTH); // 23 + 13
+        buffer.order(ByteOrder.BIG_ENDIAN);
 
-        // Write the number of kilobytes shared
-        outputStream.write(Byte.toUnsignedInt(pong.getKilobytesShared()));
 
-        return outputStream.toByteArray();
+        buffer.put(this.getPingID());
 
+        buffer.put(TYPE_ID);
+
+        buffer.put(this.getTimeToLive());
+
+        buffer.put(this.getHops());
+
+        buffer.putInt(PAYLOAD_LENGTH);
+
+        buffer.putShort(this.getPortNum());
+
+        buffer.put(Network.getLocalIpAddress());
+
+        buffer.put(this.getSharedFiles());
+
+        buffer.putInt(this.getKilobytesShared());
+
+        return buffer.array();
     }
+
+
+    // TODO
+    //  save incoming host info
+    /**
+     *
+     * save to host cache - done
+     * ping onwards - done
+     * send own pong back - done
+     * check existance of this ips pong cache file create or not
+     * send 10 random pings back excluding from this servent - guessing this is fonor bia ip
+     */
+
 }

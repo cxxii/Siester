@@ -7,6 +7,15 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class Client {
+
+    /**
+     * TO BE REMOVED
+     *
+     *
+     *
+     *
+     * TO BE REMOVED
+     */
     String serverAddress = "localhost"; // Address of the server
     int port = 65432; // Port on which the server is listening
 

@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import net.bytebuddy.description.method.MethodDescription;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
+import org.cxxii.utils.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,7 +149,7 @@ public class PingMessage extends MessageAbstract {
         }
     }
 
-    public void pingOnwards(PingMessage ping, InetSocketAddress addr) {
+    private void pingOnwards(PingMessage ping, InetSocketAddress addr) {
 
         List<SocketAddr> hosts = readHostCache();
 
@@ -159,21 +160,53 @@ public class PingMessage extends MessageAbstract {
             }
     }
 
+    private static boolean checkHostInCache(InetSocketAddress addr) {
+        List<SocketAddr> hosts = readHostCache();
+
+        for (SocketAddr socketAddr :hosts) {
+            if (addr.getAddress()  socketAddr && addr.getPort()
+
+        }
+    }
+
+    private static boolean searchForPort(List<SocketAddr> sockets, int port, InetSocketAddress addr) {
+        for (SocketAddr socket : sockets) {
+            if (socket.getIp().equals(addr) &&  socket.getPort() == port) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void searchForIp(SocketAddr sockets, InetSocketAddress ip) {
+
+    }
+
 
     //public void process(byte[] messageID, byte typeId, byte timeToLive, byte hops, byte payloadLength, InetSocketAddress addr) throws IOException {
     public PingMessage process(InetSocketAddress addr) throws IOException {
 
         if (this.getTimeToLive() != 0) {
 
-            // helper method to add and reduce these
             this.setHops((byte) (this.getTimeToLive () - 1));
             this.setHops((byte) (this.getHops () + 1));
+
+            // save host to cache
+            // check if in file first
+
+            if (!hostInCache(addr)) {
+                Json.appendToHostCacheJson(addr);
+            }
+
 
             // Proliferate through network
             pingOnwards(this, addr);
 
             // return hosts own pong
             PongMessage.respond(this.getBytesMessageID(), this.getTimeToLive(), this.getHops(), addr);
+
+
 
 
             // return 10 pongs from pongcaches (10 random atm)

@@ -4,16 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileManager {
 
@@ -50,7 +45,7 @@ public class FileManager {
         }
     }
 
-    public static void performFileChecks() throws IOException {
+    public static void  performFileChecks() throws IOException {
         LOGGER.info("Performing file checks");
 
         // Get directory
@@ -79,6 +74,12 @@ public class FileManager {
 
         return Paths.get(USER_HOME, DIRECTORY_NAME, HOST_CACHE);
     }
+
+    public static String getHostDetailsPath() {
+
+        return Paths.get(USER_HOME, DIRECTORY_NAME, HOST_DETAILS);
+    }
+
 
     public static void writeHostsToFile(InputStream inputStream) throws IOException {
 
