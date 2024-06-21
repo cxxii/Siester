@@ -1,5 +1,7 @@
 package org.cxxii.messages;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 public abstract class MessageAbstract {
@@ -67,9 +69,6 @@ public abstract class MessageAbstract {
         return typeId;
     }
 
-    public int getPayloadLength() {
-        return payloadLength;
-    }
 
 
 
@@ -94,4 +93,6 @@ public abstract class MessageAbstract {
     public void setHops(byte hops) {
         this.hops = hops;
     }
+
+    public abstract MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException;
 }

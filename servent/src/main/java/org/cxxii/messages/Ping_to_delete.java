@@ -2,6 +2,7 @@ package org.cxxii.messages;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
@@ -63,6 +64,11 @@ public class Ping_to_delete extends MessageAbstract {
 
     public void setHops(byte hops) {
         this.hops = hops;
+    }
+
+    @Override
+    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+        return null;
     }
 
     public byte getTYPE_ID() {

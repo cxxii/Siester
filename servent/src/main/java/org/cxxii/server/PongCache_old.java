@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PongCache {
+public class PongCache_old {
     private List<Pong> pongs;
 
-    public PongCache() {
+    public PongCache_old() {
         this.pongs = new ArrayList<>();
     }
 
@@ -27,9 +27,9 @@ public class PongCache {
         mapper.writeValue(new File(filename), this);
     }
 
-    public static PongCache loadFromFile(String filename) throws IOException {
+    public static PongCache_old loadFromFile(String filename) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(new File(filename), PongCache.class);
+        return mapper.readValue(new File(filename), PongCache_old.class);
     }
 
     // Getters and setters

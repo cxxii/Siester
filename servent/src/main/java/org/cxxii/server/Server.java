@@ -1,5 +1,6 @@
 package org.cxxii.server;
 
+import org.cxxii.gui.CLI;
 import org.cxxii.messages.*;
 import org.cxxii.server.config.Config;
 import org.cxxii.server.config.ConfigManager;
@@ -19,6 +20,8 @@ public class Server {
     public static void main(String[] args) throws IOException {
         try {
 
+
+
             // Loads config file
             loadConfiguration(); // OK
 
@@ -31,7 +34,8 @@ public class Server {
             // check host caches etc
             checkAndPingHosts(); // OK
 
-            pro
+            CLI.loop();
+
 
 
         } catch (IOException e) {

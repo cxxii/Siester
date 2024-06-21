@@ -28,7 +28,7 @@ public class PingMessage extends MessageAbstract {
 
 
     // CONSTANTS
-    private final UUID MESSAGE_ID = UUID.randomUUID();
+    private final UUID MESSAGE_ID = UUID.randomUUID(); // this is in the constructor - delete?
     private static final byte TYPE_ID = 0x00;
     private static final byte PAYLOAD_LENGTH = 0x00000000;
     //private static final byte[] PAYLOAD = null;
@@ -44,6 +44,11 @@ public class PingMessage extends MessageAbstract {
      */
     public PingMessage() {
         super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH);
+    }
+
+    @Override
+    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+        return null;
     }
 
 
@@ -100,8 +105,12 @@ public class PingMessage extends MessageAbstract {
         return outputStream.toByteArray();
     }
 
-    //move to util class?
-    private static List<SocketAddr> readHostCache() {
+    private int getPayloadLength() {
+        return PAYLOAD_LENGTH;
+    }
+
+    //move to util class? // YES // used elsewhere
+    public static List<SocketAddr> readHostCache() {
         LOGGER.info("Reading hostcache");
 
         Gson gson = new Gson();
@@ -145,8 +154,12 @@ public class PingMessage extends MessageAbstract {
 
         PingMessage ping = new PingMessage();
 
-        for (SocketAddr host : hosts) {
-            sendPing(host, ping);
+        if (hosts != null) {
+            for (SocketAddr host : hosts) {
+                sendPing(host, ping);
+            }
+        } else {
+            LOGGER.info("HOST CACHE IS EMPTY");
         }
     }
 

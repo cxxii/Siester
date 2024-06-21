@@ -19,24 +19,23 @@ public class Bootstrap {
 
     public static void pingBootstrapServer() throws IOException {
         URL url = new URL(bootstrapServerUrl);
-//        HttpURLConnection connection = null;
-//        Scanner scanner = null;
+        HttpURLConnection connection = null;
+        InputStream inputStream = null;
 
         try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-//            connection.setConnectTimeout(5000); // Set timeout for connection
-//            connection.setReadTimeout(5000); // Set timeout for reading data
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
 
             int responseCode = connection.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
 
                 // check if stream is empty
+                inputStream = connection.getInputStream();
 
-                InputStream inputStream = connection.getInputStream();
-
-                System.out.println(inputStream.available());
+//                System.out.println(inputStream.available());
 
                 // TODO - Finish this part
                 if (inputStream.available() == 0) {
@@ -44,9 +43,9 @@ public class Bootstrap {
 
                 } else {
                     LOGGER.info("Received hosts from bootstrap server");
-//                    FileManager.writeFile(inputStream);
                     FileManager.writeHostsToFile(inputStream);
                 }
+
 
 
 //                Scanner scanner = new Scanner(connection.getInputStream());
@@ -62,7 +61,19 @@ public class Bootstrap {
             }
         } catch (IOException e) {
             LOGGER.error("Error pinging bootstrap server", e);
-            throw e;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    LOGGER.error("ERROR closing stream", e);
+                }
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
+
+        LOGGER.info("Contine");
     }
 }

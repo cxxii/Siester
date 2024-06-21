@@ -40,7 +40,7 @@ public class FileManager {
                 throw new RuntimeException("ERROR while creating dir: " + directory.getAbsolutePath(), e);
             }
         } else {
-            LOGGER.info("Directory exists at " +  directory.getAbsolutePath() );
+            LOGGER.info("Directory exists at " + directory.getAbsolutePath());
         }
     }
 
@@ -55,9 +55,31 @@ public class FileManager {
                 throw new RuntimeException("ERROR while creating file: " + file.getAbsolutePath(), e);
             }
         } else {
-            LOGGER.info("Directory exists file " +  file.getAbsolutePath() );
+            LOGGER.info("Directory exists file " + file.getAbsolutePath());
         }
     }
+
+    public static boolean checkAndCreatePongFile(File file) {
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    LOGGER.info("Created file: " + file.getAbsolutePath());
+                    return true;
+                } return false;
+
+            } catch (IOException e) {
+                LOGGER.error("Failed to make file: " + file.getAbsolutePath(), e);
+                throw new RuntimeException("ERROR while creating file: " + file.getAbsolutePath(), e);
+            }
+
+        } else {
+            LOGGER.info("Directory exists file " + file.getAbsolutePath());
+            return true;
+        }
+    }
+
+
+
 
     public static void  performFileChecks() throws IOException {
         LOGGER.info("Performing file checks");
@@ -102,8 +124,6 @@ public class FileManager {
     private static Path getPath(String directory, String fileName) {
         return Paths.get(USER_HOME, directory, fileName);
     }
-
-
 
 
     public static void writeHostsToFile(InputStream inputStream) throws IOException {

@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+
 
 public class PongMessageParser implements MessageParser {
     private final static Logger LOGGER = LoggerFactory.getLogger(PongMessageParser.class);
     @Override
-    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+    public PongMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
 
         LOGGER.debug("PONG PARSE START");
         byte ttl = header[1];
@@ -26,6 +26,8 @@ public class PongMessageParser implements MessageParser {
         PongMessage pong = new PongMessage(ttl, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
 
         return pong.process(addr);
+
+
     }
 }
 

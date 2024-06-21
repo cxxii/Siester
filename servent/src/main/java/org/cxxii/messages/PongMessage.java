@@ -3,8 +3,11 @@ package org.cxxii.messages;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import org.cxxii.network.Network;
 import org.cxxii.server.Server;
+import org.cxxii.server.SocketAddr;
 import org.cxxii.server.config.Config;
 import org.cxxii.utils.FileManager;
 import org.cxxii.utils.Json;
@@ -12,10 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.List;
 
 public class PongMessage extends MessageAbstract {
 
@@ -72,6 +77,11 @@ public class PongMessage extends MessageAbstract {
     //usage?
     public PongMessage(byte typeId, byte timeToLive, byte hops, byte payloadLength) {
         super(typeId, timeToLive, hops, payloadLength);
+    }
+
+    @Override
+    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+        return null;
     }
 
 
@@ -178,14 +188,35 @@ public class PongMessage extends MessageAbstract {
         return buffer.array();
     }
 
-    public PongMessage process(InetSocketAddress addr){
+    public PongMessage process(InetSocketAddress addr) throws IOException {
 
         String filename =  addr.getHostString() + addr.getPort();
 
+        File path = new File(String.valueOf(FileManager.getNodePongDirPath()));
+
+        File file = new File(path, filename);
+
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    LOGGER.info("Created Pong file: " + file.getAbsolutePath());
+
+                    try {
+                        FileWriter writer = new FileWriter(file);
+
+                        //finish
 
 
-        File
-        FileManager.getNodePongDirPath()
+                    } catch (IOException e) {
+                        LOGGER.error("Could not write Pong data: " + file.getAbsolutePath());
+                    }
+
+                }
+            } catch (IOException e) {
+                LOGGER.error("Failed to create Pong file: " + file.getAbsolutePath());
+            }
+
+        }
 
 
         //get the Ip and port as string
@@ -194,12 +225,33 @@ public class PongMessage extends MessageAbstract {
         // yes - overwrite oldest bit of info if there is less than 10 pong infomation (also add date time its written)
 
 
-
-
-
-
-        return 0;
+        return this;
     }
+
+    // List<Pong> return
+    private static void  readNodePong(File nodePong) {
+        LOGGER.info("Reading Node Pong");
+
+        Gson gson = new Gson();
+        List<PongCache> pongs = null;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(nodePong))) {
+
+            JsonReader jsonReader = new JsonReader(br);
+            Type listType = new TypeToken<List<PongCache>>() {
+            }.getType();
+            pongs = gson.fromJson(jsonReader, listType);
+
+        } catch (IOException e) {
+
+            LOGGER.error("Could not read nodePong", e);
+        }
+
+        //return pongs;
+    }
+
+
+
 
 
     // TODO
