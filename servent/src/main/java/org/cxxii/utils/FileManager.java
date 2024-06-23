@@ -17,6 +17,9 @@ public class FileManager {
 
     private static final String DIRECTORY_NAME = "siester";
     private static final String PONG_DIRECTORY = "siester/node_pongs";
+    private static final String SHARED_DIRECTORY = "siester/shared";
+    private static final String DOWNLOAD_DIRECTORY = "shared/download";
+    private static final String UPLOAD_DIRECTORY = "shared/upload";
     private static final String HOST_DIRECTORY = "siester/host";
     private static final String LOG_DIRECTORY = "siester/logs";
     private static final String HOST_CACHE = "host_cache.json";
@@ -59,27 +62,6 @@ public class FileManager {
         }
     }
 
-    public static boolean checkAndCreatePongFile(File file) {
-        if (!file.exists()) {
-            try {
-                if (file.createNewFile()) {
-                    LOGGER.info("Created file: " + file.getAbsolutePath());
-                    return true;
-                } return false;
-
-            } catch (IOException e) {
-                LOGGER.error("Failed to make file: " + file.getAbsolutePath(), e);
-                throw new RuntimeException("ERROR while creating file: " + file.getAbsolutePath(), e);
-            }
-
-        } else {
-            LOGGER.info("Directory exists file " + file.getAbsolutePath());
-            return true;
-        }
-    }
-
-
-
 
     public static void  performFileChecks() throws IOException {
         LOGGER.info("Performing file checks");
@@ -90,12 +72,19 @@ public class FileManager {
         File hostDirectory = new File(USER_HOME, HOST_DIRECTORY);
         File logDirectory = new File(USER_HOME, LOG_DIRECTORY);
 
+        File sharedDirectory = new File(USER_HOME, SHARED_DIRECTORY);
+        File downloadDirectory = new File(USER_HOME, DOWNLOAD_DIRECTORY);
+        File uploadDirectory = new File(USER_HOME, UPLOAD_DIRECTORY);
+
 
         // Checks n Creates Dir
         checkAndCreateDir(mainDirectory);
         checkAndCreateDir(pongDirectory);
         checkAndCreateDir(hostDirectory);
         checkAndCreateDir(logDirectory);
+        checkAndCreateDir(sharedDirectory);
+        checkAndCreateDir(uploadDirectory);
+        checkAndCreateDir(downloadDirectory);
 
         // Checks n Creates Files
         checkAndCreateFile(new File(hostDirectory, HOST_CACHE));
@@ -119,6 +108,9 @@ public class FileManager {
 
     public static Path getNodePongDirPath() {
         return getPath(DIRECTORY_NAME, PONG_DIRECTORY);
+    }
+    public static Path getUploadDirPath() {
+        return getPath(DIRECTORY_NAME, UPLOAD_DIRECTORY);
     }
 
     private static Path getPath(String directory, String fileName) {

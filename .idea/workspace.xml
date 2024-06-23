@@ -4,18 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="File manager changes">
+    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="QUERY TIME">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/gui/CLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/gui/CLI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping_to_delete.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping_to_delete.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/PongCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/PongCache_old.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessageParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" afterDir="false" />
     </list>
@@ -193,7 +188,7 @@
       <workItem from="1718718836432" duration="8352000" />
       <workItem from="1718754399353" duration="16737000" />
       <workItem from="1718819550303" duration="38922000" />
-      <workItem from="1719005499039" duration="2129000" />
+      <workItem from="1719005499039" duration="39562000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -275,7 +270,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718833951732</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="QUERY TIME">
+      <option name="closed" value="true" />
+      <created>1719007722175</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1719007722175</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -291,7 +294,8 @@
     <MESSAGE value="server refactor - classpath used now" />
     <MESSAGE value="finalising ping pong messaging" />
     <MESSAGE value="File manager changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="File manager changes" />
+    <MESSAGE value="QUERY TIME" />
+    <option name="LAST_COMMIT_MESSAGE" value="QUERY TIME" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

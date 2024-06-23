@@ -76,7 +76,6 @@ public class MessageFactoryImpl implements MessageFactory {
         MessageParser parser = getParser(typeId);
         if (parser == null) throw new IOException("Unknown type ID: " + (byte) typeId);
 
-
         return parser.parse(header, payload, addr);
     }
 

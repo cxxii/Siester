@@ -2,20 +2,25 @@ package org.cxxii.messages;
 
 import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
+import org.cxxii.utils.FileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class QueryMessage extends MessageAbstract{
+public class QueryMessage extends MessageAbstract {
 
     // LOGGER
     private final static Logger LOGGER = LoggerFactory.getLogger(QueryMessage.class);
@@ -32,16 +37,17 @@ public class QueryMessage extends MessageAbstract{
 
     // INSTANCE
     //private byte PAYLOAD_LENGTH = 0x00000000;
-    private byte payloadLength;
+    private int payloadLength;
     private byte timeToLive = (byte) 0x07;
     private byte hops = (byte) 0x00;
 
 
     private String query;
+    private byte[] queryBytes;
     private int minSpeed;
 
 
-    public void setPayloadLength(byte payloadLength) {
+    public void setPayloadLength(int payloadLength) {
         this.payloadLength = payloadLength;
     }
 
@@ -83,13 +89,24 @@ public class QueryMessage extends MessageAbstract{
 
     // CONSTRUCTOR
 
-    public QueryMessage(byte timeToLive, byte hops, byte payloadLength, int minSpeed, String query) {
-        super(TYPE_ID, (byte) 0x07, (byte) 0x00, payloadLength);
+//    public QueryMessage(byte timeToLive, byte hops, byte payloadLength, int minSpeed, String query) {
+//        super(TYPE_ID, (byte) 0x07, (byte) 0x00, payloadLength);
+//        this.payloadLength = payloadLength;
+//        this.timeToLive = timeToLive;
+//        this.hops = hops;
+//        this.minSpeed = minSpeed;
+//        this.query = query;
+//    }
+
+
+    // RECEIVED QUERY (PARSE)
+    public QueryMessage(byte[] bytesMessageID, byte typeId, byte timeToLive, byte hops, int payloadLength, byte minSpeed, byte[] queryBytes) {
+        super(bytesMessageID, typeId, timeToLive, hops, (byte) payloadLength);
         this.payloadLength = payloadLength;
         this.timeToLive = timeToLive;
         this.hops = hops;
+        this.queryBytes = queryBytes;
         this.minSpeed = minSpeed;
-        this.query = query;
     }
 
     public QueryMessage(byte payloadLength, String query) {
@@ -119,9 +136,7 @@ public class QueryMessage extends MessageAbstract{
         return queryByteArray.length;
     }
 
-
-
-    public byte[] serializeMessage() throws IOException {
+    private byte[] serializeMessage() throws IOException {
         if (this.getPayloadLength(this.query) == 0) {
             throw new NullPointerException("Query is null");
         }
@@ -163,8 +178,7 @@ public class QueryMessage extends MessageAbstract{
     }
 
 
-
-    public static String getUsersQuery(){
+    private static String getUsersQuery() {
         Scanner scanner = new Scanner(System.in);
 
         return scanner.nextLine();
@@ -174,14 +188,121 @@ public class QueryMessage extends MessageAbstract{
 
         List<SocketAddr> hosts = PingMessage.readHostCache(); // change
 
-        String qq = getUsersQuery();
+        String usersQuery = getUsersQuery();
 
-        byte pylen = (byte) getPayloadLength(qq);
+        byte queryLength = (byte) getPayloadLength(usersQuery);
 
-        QueryMessage queryMessage = new QueryMessage(pylen, qq);
+        QueryMessage queryMessage = new QueryMessage(queryLength, usersQuery);
+
 
         for (SocketAddr host : hosts) {
             sendQuery(host, queryMessage);
         }
     }
+
+
+    // copied from ping need to change
+//    private void queryOnwards(PingMessage ping, InetSocketAddress addr) {
+//
+//        List<SocketAddr> hosts = readHostCache();
+//
+//        if (ping.getTimeToLive() < 0)
+//
+//            for (SocketAddr host : hosts) {
+//                sendPing(host, ping);
+//            }
+//    }
+
+
+//    public QueryMessage process(InetSocketAddress addr) throws UnsupportedEncodingException {
+//        LOGGER.info("Processing QUERY");
+//
+//
+//        // change ttl and hops
+//        if (this.getTimeToLive() != 0) {
+//
+//            this.setHops((byte) (this.getTimeToLive() - 1));
+//            this.setHops((byte) (this.getHops() + 1));
+//
+//            // query onward
+//
+//
+//        }
+//
+//        LOGGER.info("MESAGE DIED WITH YOU'");
+//
+//        byte[] queryByes = this.queryBytes;
+//
+//        String queryString = new String(queryByes, "UTF-8");
+//
+//        File reqfile = new File(String.valueOf(FileManager.getUploadDirPath()) + "/" + queryString);
+//
+//        System.out.println(reqfile);
+//
+//        System.out.println(queryString);
+//
+//        if (reqfile.isFile()) {
+//            System.out.println("FILE FOUND" + reqfile.getName());
+//        } else {
+//            System.out.println("NO FILE");
+//        }
+//
+//
+//
+//        System.out.println(Arrays.toString(queryByes));
+//
+//
+//        return this;
+//    }
+
+    public QueryMessage process(InetSocketAddress addr) throws IOException {
+        LOGGER.info("Processing QUERY");
+
+        // Update ttl and hops
+        if (this.getTimeToLive() != 0) {
+            this.setTimeToLive((byte) (this.getTimeToLive() - 1));
+            this.setHops((byte) (this.getHops() + 1));
+            // query onward logic if any
+        }
+
+        LOGGER.info("MESSAGE DIED");
+
+        String queryString = new String(this.queryBytes, StandardCharsets.UTF_8);
+
+        // Construct the file path
+        String uploadDirPath = String.valueOf(FileManager.getUploadDirPath());
+        String filePath = uploadDirPath + "/" + queryString;
+
+
+        File reqfile = new File(filePath);
+
+        filePath.startsWith()
+
+        // Check if the file exists and is a file
+        if (reqfile.isFile()) {
+            LOGGER.info("FILE FOUND: " + reqfile.getName());
+            System.out.println("FILE FOUND: " + reqfile.getName());
+        } else {
+            LOGGER.info("NO FILE FOUND at: " + filePath);
+            System.out.println("NO FILE FOUND at: " + filePath);
+        }
+
+        if  (reqfile.exists()) {
+            LOGGER.info("okokkoko");
+        }
+
+        return this;
+    }
+
+
 }
+
+
+
+
+
+
+
+        // check our files for the query
+
+

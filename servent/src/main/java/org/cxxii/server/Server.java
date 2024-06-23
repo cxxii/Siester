@@ -34,6 +34,8 @@ public class Server {
             // check host caches etc
             checkAndPingHosts(); // OK
 
+            System.out.println("running");
+
             CLI.loop();
 
 

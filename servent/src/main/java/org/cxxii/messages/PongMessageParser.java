@@ -14,7 +14,7 @@ public class PongMessageParser implements MessageParser {
     public PongMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
 
         LOGGER.debug("PONG PARSE START");
-        byte ttl = header[1];
+        byte timeToLive = header[1];
         byte hops = header[2];
         byte payloadLength = header[3];
 
@@ -23,7 +23,7 @@ public class PongMessageParser implements MessageParser {
         byte sharedFiles = (byte) 10;
         int kilobytesShared = 2048;
 
-        PongMessage pong = new PongMessage(ttl, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
+        PongMessage pong = new PongMessage(timeToLive, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
 
         return pong.process(addr);
 
