@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="QUERY TIME">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/servent/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessageParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/test/java/filemanager/FileManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/test/java/filemanager/FileManagerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/test/java/messages/parse/PingMessageParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/test/java/messages/parse/PingMessageParserTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="Docker.. Does not work..." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -187,7 +180,7 @@
       <workItem from="1718754399353" duration="16737000" />
       <workItem from="1718819550303" duration="38922000" />
       <workItem from="1719005499039" duration="59280000" />
-      <workItem from="1719256637801" duration="4812000" />
+      <workItem from="1719256637801" duration="5313000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -285,7 +278,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719153620094</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Docker.. Does not work...">
+      <option name="closed" value="true" />
+      <created>1719268012154</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1719268012154</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,7 +303,8 @@
     <MESSAGE value="finalising ping pong messaging" />
     <MESSAGE value="File manager changes" />
     <MESSAGE value="QUERY TIME" />
-    <option name="LAST_COMMIT_MESSAGE" value="QUERY TIME" />
+    <MESSAGE value="Docker.. Does not work..." />
+    <option name="LAST_COMMIT_MESSAGE" value="Docker.. Does not work..." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
