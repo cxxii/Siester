@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static org.cxxii.search.FuzzySearch.fuzzySearchFiles;
+
 public class QueryMessage extends MessageAbstract {
 
     // LOGGER
@@ -259,50 +261,37 @@ public class QueryMessage extends MessageAbstract {
         LOGGER.info("Processing QUERY");
 
         // Update ttl and hops
-        if (this.getTimeToLive() != 0) {
+        if (this.getTimeToLive() > 0) {
             this.setTimeToLive((byte) (this.getTimeToLive() - 1));
             this.setHops((byte) (this.getHops() + 1));
+
+            // query on
             // query onward logic if any
         }
-
-        LOGGER.info("MESSAGE DIED");
 
         String queryString = new String(this.queryBytes, StandardCharsets.UTF_8);
 
         // Construct the file path
-        String uploadDirPath = String.valueOf(FileManager.getUploadDirPath());
-        String filePath = uploadDirPath + "/" + queryString;
+        //String uploadDirPath = String.valueOf(FileManager.getUploadDirPath());
+        //String filePath = uploadDirPath + "/" + queryString;
 
 
-        File reqfile = new File(filePath);
+        // SEARCH
+        List<Long> matchedFiles = fuzzySearchFiles(queryString);
 
-        filePath.startsWith()
-
-        // Check if the file exists and is a file
-        if (reqfile.isFile()) {
-            LOGGER.info("FILE FOUND: " + reqfile.getName());
-            System.out.println("FILE FOUND: " + reqfile.getName());
+        if (matchedFiles.isEmpty()) {
+            System.out.println("No files found matching the fuzzy query.");
         } else {
-            LOGGER.info("NO FILE FOUND at: " + filePath);
-            System.out.println("NO FILE FOUND at: " + filePath);
+            System.out.println("Files found matching the fuzzy query:");
+            for (Long file : matchedFiles) {
+                System.out.println(file);
+            }
         }
 
-        if  (reqfile.exists()) {
-            LOGGER.info("okokkoko");
-        }
+
+        // gen query hit
 
         return this;
     }
-
-
 }
-
-
-
-
-
-
-
-        // check our files for the query
-
 

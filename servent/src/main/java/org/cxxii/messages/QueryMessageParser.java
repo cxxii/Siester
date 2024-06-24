@@ -35,6 +35,7 @@ public class QueryMessageParser implements MessageParser{
 
         QueryMessage queryMessage = new QueryMessage(messageId, typeID, timeToLive, hops, payloadLength, minSpeed, queryBytes);
 
+
         return queryMessage.process(addr);
 
     }
