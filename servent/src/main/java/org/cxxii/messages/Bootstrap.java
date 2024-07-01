@@ -13,7 +13,8 @@ import java.util.Scanner;
 
 public class Bootstrap {
 
-    private static final String bootstrapServerUrl = "http://127.0.0.1:4545/gnutella/get_peers";
+    //private static final String bootstrapServerUrl = "http://127.0.0.1:4545/gnutella/get_peers";
+    private static final String bootstrapServerUrl = "http://192.168.1.22:4545/bootstrap";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
 

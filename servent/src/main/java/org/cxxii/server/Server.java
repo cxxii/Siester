@@ -2,6 +2,7 @@ package org.cxxii.server;
 
 import org.cxxii.gui.CLI;
 import org.cxxii.messages.*;
+import org.cxxii.network.Network;
 import org.cxxii.server.config.Config;
 import org.cxxii.server.config.ConfigManager;
 import org.slf4j.Logger;
@@ -11,8 +12,11 @@ import org.cxxii.utils.FileManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 
 import static org.cxxii.messages.PingMessage.startPings;
+
+// TODO  - Move entry point to own class
 
 public class Server {
     private final static Logger LOGGER = LoggerFactory.getLogger(Server.class);
@@ -34,9 +38,12 @@ public class Server {
             // check host caches etc
             checkAndPingHosts(); // OK
 
-            System.out.println("running");
+            // DEBUGGING purpose
+            String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
+            LOGGER.debug("Local IP address: " + ipString);
 
-            CLI.loop();
+
+//            CLI.loop();
 
 
 
@@ -45,7 +52,7 @@ public class Server {
         }
     }
 
-    public static void startServer() throws IOException {
+    private static void startServer() throws IOException {
         Config config = ConfigManager.getInstance().getCurrentconfig();
         MessageFactoryImpl messageFactory =  new MessageFactoryImpl();
 
@@ -55,7 +62,7 @@ public class Server {
         serverListenerThread.start();
     }
 
-    public static void loadConfiguration() {
+    private static void loadConfiguration() {
         ConfigManager configManager = ConfigManager.getInstance();
         try (InputStream inputStream = Server.class.getClassLoader().getResourceAsStream("serverconfig.json")) {
             if (inputStream == null) {
@@ -72,7 +79,7 @@ public class Server {
     }
 
 
-    public static MessageFactoryImpl registerParsers(MessageFactoryImpl messageFactory) {
+    private static MessageFactoryImpl registerParsers(MessageFactoryImpl messageFactory) {
 
         messageFactory.setParser((byte) 0x00, new PingMessageParser());
         messageFactory.setParser((byte) 0x01, new PongMessageParser());
@@ -83,10 +90,7 @@ public class Server {
         return messageFactory;
     }
 
-
-    // BUG - Doesnt ping bootstrap but cant read cache becasue is null? size is now 1B before it was 0??
-    // BUG - FIXED?
-    public static void checkAndPingHosts() throws IOException {
+    private static void checkAndPingHosts() throws IOException {
 
         if (FileManager.checkHostCacheSize() == 0) {
 

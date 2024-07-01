@@ -1,9 +1,12 @@
 package org.cxxii.messages;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import net.bytebuddy.description.method.MethodDescription;
+import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
 import org.cxxii.utils.Json;
@@ -12,10 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -116,27 +116,24 @@ public class PingMessage extends MessageAbstract {
     }
 
     //move to util class? // YES // used elsewhere
+    // BUG - JSON bug in here - gson
     public static List<SocketAddr> readHostCache() {
         LOGGER.info("Reading hostcache");
 
-        Gson gson = new Gson();
+        ObjectMapper objectMapper = new ObjectMapper();
         List<SocketAddr> addresses = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FileManager.getHostCachePath().toFile()))) {
 
-            JsonReader jsonReader = new JsonReader(br);
-            Type listType = new TypeToken<List<SocketAddr>>() {
-            }.getType();
-            addresses = gson.fromJson(jsonReader, listType);
-
+        try {
+            addresses = objectMapper.readValue(new File(String.valueOf(FileManager.getHostCachePath().toFile())), new TypeReference<List<SocketAddr>>() {});
         } catch (IOException e) {
-
             LOGGER.error("Could not read hostcache", e);
         }
 
         return addresses;
     }
 
+    // TODO - REMOVE??
 //    private static void sendPing(SocketAddr host, PingMessage ping) {
 //
 //        try (Socket socket = new Socket(host.getIp(), host.getPort());
@@ -154,7 +151,12 @@ public class PingMessage extends MessageAbstract {
 //        }
 //    }
 
-    public static void startPings() {
+
+    // now doesn't ping same IP - must make sure images run on different ips on the network
+    // tidy local ipstring getter
+    public static void startPings() throws SocketException, UnknownHostException {
+
+        String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
 
         List<SocketAddr> hosts = readHostCache();
 
@@ -162,14 +164,16 @@ public class PingMessage extends MessageAbstract {
 
         if (hosts != null) {
             for (SocketAddr host : hosts) {
-                sendPing(host, ping);
+                if (!host.getIp().getHostAddress().equals(ipString)) {
+                    sendPing(host, ping);
+                }
             }
         } else {
             LOGGER.info("HOST CACHE IS EMPTY");
         }
     }
 
-    public static void sendPing(SocketAddr host, PingMessage ping) {
+    private static void sendPing(SocketAddr host, PingMessage ping) {
         executorService.submit(() -> {
             for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try (Socket socket = new Socket(host.getIp(), host.getPort());
@@ -181,7 +185,8 @@ public class PingMessage extends MessageAbstract {
                     outputStream.flush();
 
                     LOGGER.info("PING sent to: " + host.getIp() + ":" + host.getPort());
-                    break;  // Exit the loop if the ping is successful
+                    LOGGER.info("PING ID: " + ping.MESSAGE_ID);
+                    break;
 
                 } catch (IOException e) {
                     LOGGER.error("Attempt " + attempt + " FAILED to send PING to: " + host.getIp() + ":" + host.getPort(), e);
@@ -189,7 +194,6 @@ public class PingMessage extends MessageAbstract {
                         LOGGER.error("All attempts to ping the host failed.");
                     } else {
                         try {
-                            // Wait before retrying
                             Thread.sleep(1000);
                         } catch (InterruptedException interruptedException) {
                             Thread.currentThread().interrupt();
@@ -226,7 +230,7 @@ public class PingMessage extends MessageAbstract {
 
 
     //public void process(byte[] messageID, byte typeId, byte timeToLive, byte hops, byte payloadLength, InetSocketAddress addr) throws IOException {
-    public PingMessage process(InetSocketAddress addr) throws IOException {
+    protected PingMessage process(InetSocketAddress addr) throws IOException {
 
         LOGGER.info("Processing PING.");
 

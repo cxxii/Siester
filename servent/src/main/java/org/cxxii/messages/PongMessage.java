@@ -134,6 +134,7 @@ public class PongMessage extends MessageAbstract {
 
             // Send Pong message
             sendPongMessage(pong, addr);
+            LOGGER.info("SENT PONG: " + pong.pingID + "to" + addr.getHostString());
         } catch (IOException e) {
             LOGGER.error("Error responding to ping", e);
         }

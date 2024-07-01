@@ -27,7 +27,6 @@ public class ServerListenerThread extends Thread {
 
     @Override
     public void run() {
-
         try {
 
             while (serverSocket.isBound() && !serverSocket.isClosed()) {

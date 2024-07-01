@@ -44,10 +44,6 @@ public class ConnectionWorkerThread extends Thread {
 
             MessageAbstract message = messageFactory.read(inputStream, socketAddr); // early code this has changed the way its used
 
-            //TODO we would read
-
-            //TODO Do Writing
-
 
             LOGGER.info("Connection Processing Finished.");
 

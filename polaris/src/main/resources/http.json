@@ -1,4 +1,4 @@
 {
-  "port": 8080,
+  "port": 4545,
   "webroot": "/src"
 }

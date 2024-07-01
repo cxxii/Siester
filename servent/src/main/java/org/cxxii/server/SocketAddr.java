@@ -7,11 +7,22 @@ import java.net.SocketAddress;
 //TODO Fix the socketarr refs
 
 public class SocketAddr{
-    private final InetAddress ip;
-    private final int port;
+    private InetAddress ip;
+    private int port;
 
     public SocketAddr(InetAddress ip, int port) {
         this.ip = ip;
+        this.port = port;
+    }
+
+    public SocketAddr() {
+    }
+
+    public void setIp(InetAddress ip) {
+        this.ip = ip;
+    }
+
+    public void setPort(int port) {
         this.port = port;
     }
 
