@@ -27,20 +27,7 @@ public class MessageFactoryImpl implements MessageFactory {
         parsers.put(functionId, parser);
     }
 
-    //throw bad packet exceptions
-//    @Override
-//    public MessageAbstract read(InputStream in) throws IOException {
-//        byte[] buf = new byte[23];
-//        int length = in.read(buf);
-//        if (length != 23) throw new IOException("Incomplete header");
-//
-//        byte func = buf[16];
-//        MessageParser parser = getParser(func);
-//        if (parser == null) throw new IOException("Unknown function ID: " + func);
-//
-//        return parser.parse(buf);
-//    }
-    @Override
+
     public MessageAbstract read(InputStream in, InetSocketAddress addr) throws IOException {
         LOGGER.info("Reading Start");
         byte[] header = new byte[HEADER_LENGTH];
@@ -52,14 +39,17 @@ public class MessageFactoryImpl implements MessageFactory {
             if (result == EOF) {
                 throw new IOException("Incomplete header");
             }
+
             bytesRead += result;
         }
 
-        // Read payloadlength // SUPER IMPORTANT // finds the end of message
-        byte[] payloadLengthBytes = Arrays.copyOfRange(header,19,23);
+        // Read payload length
+        byte[] payloadLengthBytes = Arrays.copyOfRange(header, 19, 23);
+        LOGGER.info("READ - PAYLLENBYTE " + Arrays.toString(payloadLengthBytes));
         ByteBuffer wrapped = ByteBuffer.wrap(payloadLengthBytes);
+
         int payloadLength = wrapped.getInt();
-        LOGGER.debug("payload len is " + payloadLength);
+        LOGGER.debug("Payload length is " + payloadLength);
 
         byte[] payload = new byte[payloadLength];
         int totalBytesRead = 0;
@@ -69,15 +59,18 @@ public class MessageFactoryImpl implements MessageFactory {
             if (bytesReadPayload == EOF) {
                 throw new IOException("Unexpected end of stream while reading payload");
             }
+
             totalBytesRead += bytesReadPayload;
         }
 
         byte typeId = header[16];
         MessageParser parser = getParser(typeId);
-        if (parser == null) throw new IOException("Unknown type ID: " + (byte) typeId);
+        if (parser == null) throw new IOException("Unknown type ID: " + typeId);
 
         return parser.parse(header, payload, addr);
     }
+
+
 
     @Override
     public MessageAbstract createMessage(byte[] header, byte[] payload, SocketAddress addr) throws IOException {

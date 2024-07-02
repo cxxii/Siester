@@ -51,11 +51,20 @@ public abstract class MessageAbstract {
         //this.payload = payload;
     }
 
+//    public MessageAbstract(byte typeId, byte timeToLive, byte hops, byte payloadLength) {
+//        this.typeId = typeId;
+//        this.timeToLive = timeToLive;
+//        this.hops = hops;
+//        this.payloadLength = payloadLength;
+//        //this.payload = payload;
+//    }
+
 
     //remove
     public MessageAbstract() {
 
     }
+
 
     public UUID getMessageID() {
         return messageID;
@@ -93,6 +102,4 @@ public abstract class MessageAbstract {
     public void setHops(byte hops) {
         this.hops = hops;
     }
-
-    public abstract MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException;
 }

@@ -11,6 +11,8 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.cxxii.utils.Json.writeDefaultHostDetails;
+
 public class FileManager {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FileManager.class);
@@ -71,7 +73,6 @@ public class FileManager {
         File pongDirectory = new File(USER_HOME, PONG_DIRECTORY);
         File hostDirectory = new File(USER_HOME, HOST_DIRECTORY);
         File logDirectory = new File(USER_HOME, LOG_DIRECTORY);
-
         File sharedDirectory = new File(USER_HOME, SHARED_DIRECTORY);
         File downloadDirectory = new File(USER_HOME, DOWNLOAD_DIRECTORY);
         File uploadDirectory = new File(USER_HOME, UPLOAD_DIRECTORY);
@@ -92,11 +93,20 @@ public class FileManager {
         checkAndCreateFile(new File(mainDirectory, HOST_DETAILS));
         checkAndCreateFile(new File(logDirectory, LOG_DETAILS));
 
+        if (checkHostDetailsSize() == 0) {
+            Json.writeDefaultHostDetails();
+        }
     }
 
     public static long checkHostCacheSize() throws IOException {
         return Files.size(getPath(HOST_DIRECTORY, HOST_CACHE));
     }
+
+    public static long checkHostDetailsSize() throws IOException {
+        return Files.size(getHostDetailsPath());
+    }
+
+
 
     public static Path getHostCachePath() {
         return getPath(HOST_DIRECTORY, HOST_CACHE);

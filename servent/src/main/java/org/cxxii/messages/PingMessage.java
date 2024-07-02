@@ -30,16 +30,16 @@ public class PingMessage extends MessageAbstract {
 
 
     // CONSTANTS
-    private final UUID MESSAGE_ID = UUID.randomUUID(); // this is in the constructor - delete?
     private static final byte TYPE_ID = 0x00;
     private static final byte PAYLOAD_LENGTH = 0x00000000;
-    //private static final byte[] PAYLOAD = null;
 
 
     // INSTANCE
     private byte timeToLive = (byte) 0x07;
     private byte hops = (byte) 0x00;
 
+
+    // TODO - CHANGE HOW THIS WORKS
     private static final int MAX_RETRIES = 2;
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -50,11 +50,6 @@ public class PingMessage extends MessageAbstract {
      */
     public PingMessage() {
         super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH);
-    }
-
-    @Override
-    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
-        return null;
     }
 
 
@@ -89,7 +84,10 @@ public class PingMessage extends MessageAbstract {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         // Write the UUID
-        outputStream.write(message.UUIDtoByteArray(message.MESSAGE_ID));
+        byte[] ping_ID_debug = message.UUIDtoByteArray(message.getMessageID());
+        outputStream.write(ping_ID_debug);
+
+        LOGGER.info("PING BYTE ID = " + Arrays.toString(ping_ID_debug));
 
         // Write the message type (Ping_to_delete)
         outputStream.write(Byte.toUnsignedInt(message.getTypeId()));
@@ -123,7 +121,6 @@ public class PingMessage extends MessageAbstract {
         ObjectMapper objectMapper = new ObjectMapper();
         List<SocketAddr> addresses = null;
 
-
         try {
             addresses = objectMapper.readValue(new File(String.valueOf(FileManager.getHostCachePath().toFile())), new TypeReference<List<SocketAddr>>() {});
         } catch (IOException e) {
@@ -133,59 +130,39 @@ public class PingMessage extends MessageAbstract {
         return addresses;
     }
 
-    // TODO - REMOVE??
-//    private static void sendPing(SocketAddr host, PingMessage ping) {
-//
-//        try (Socket socket = new Socket(host.getIp(), host.getPort());
-//             OutputStream outputStream = socket.getOutputStream()) {
-//
-//            byte[] serializedPing = serializeMessage(ping);
-//
-//            outputStream.write(serializedPing);
-//            outputStream.flush();
-//
-//            LOGGER.info("PING sent to: " + host.getIp() + ":" + host.getPort());
-//
-//        } catch (IOException e) {
-//            LOGGER.error("FAILED to send PING to: " + host.getIp() + ":" + host.getPort(), e);
-//        }
-//    }
 
-
-    // now doesn't ping same IP - must make sure images run on different ips on the network
-    // tidy local ipstring getter
     public static void startPings() throws SocketException, UnknownHostException {
+        LOGGER.info("PINGING cached hosts...");
 
         String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
 
         List<SocketAddr> hosts = readHostCache();
 
-        PingMessage ping = new PingMessage();
-
         if (hosts != null) {
             for (SocketAddr host : hosts) {
                 if (!host.getIp().getHostAddress().equals(ipString)) {
-                    sendPing(host, ping);
+                    PingMessage ping = new PingMessage();
+                    ping.sendPing(host);
                 }
             }
-        } else {
-            LOGGER.info("HOST CACHE IS EMPTY");
         }
     }
 
-    private static void sendPing(SocketAddr host, PingMessage ping) {
+    private void sendPing(SocketAddr host) {
+
         executorService.submit(() -> {
+
             for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try (Socket socket = new Socket(host.getIp(), host.getPort());
                      OutputStream outputStream = socket.getOutputStream()) {
 
-                    byte[] serializedPing = serializeMessage(ping);
+                    byte[] serializedPing = serializeMessage(this);
 
                     outputStream.write(serializedPing);
                     outputStream.flush();
 
-                    LOGGER.info("PING sent to: " + host.getIp() + ":" + host.getPort());
-                    LOGGER.info("PING ID: " + ping.MESSAGE_ID);
+                    LOGGER.info("PING sent" + Arrays.toString(serializedPing) + "To: " + host.getIp());
+
                     break;
 
                 } catch (IOException e) {
@@ -204,22 +181,25 @@ public class PingMessage extends MessageAbstract {
         });
     }
 
-    private void pingOnwards(PingMessage ping, InetSocketAddress addr) {
+    private void pingOnwards(InetSocketAddress addr) {
+        LOGGER.info("PINGING ONWARDS");
 
         List<SocketAddr> hosts = readHostCache();
 
-        if (ping.getTimeToLive() < 0)
+        if (this.getTimeToLive() < 0)
 
             for (SocketAddr host : hosts) {
-                sendPing(host, ping);
+                if (!host.getIp().equals(addr)) {
+                    this.sendPing(host);
+                }
             }
     }
 
-    private static boolean checkHostInCache(int port, InetAddress addr) {
+    private static boolean checkHostInCache(InetAddress addr) {
         List<SocketAddr> sockets = readHostCache();
 
         for (SocketAddr socket : sockets) {
-            if (socket.getIp().equals(addr) && socket.getPort() == port) {
+            if (socket.getIp().equals(addr)) {
                 return true;
             }
         }
@@ -228,31 +208,29 @@ public class PingMessage extends MessageAbstract {
     }
 
 
-
-    //public void process(byte[] messageID, byte typeId, byte timeToLive, byte hops, byte payloadLength, InetSocketAddress addr) throws IOException {
     protected PingMessage process(InetSocketAddress addr) throws IOException {
 
         LOGGER.info("Processing PING.");
 
 
         // Check and saves host in file
-        if (!checkHostInCache(addr.getPort(), addr.getAddress())) {
+        if (!checkHostInCache(addr.getAddress())) {
             Json.appendToHostCacheJson(addr);
         }
 
-
+        LOGGER.info("PING TTL = " + this.getTimeToLive()); // ok
+        LOGGER.info("PING HOPS = " + this.getHops()); // ok
         if (this.getTimeToLive() != 0) {
 
-            this.setHops((byte) (this.getTimeToLive () - 1));
-            this.setHops((byte) (this.getHops () + 1));
+            this.setHops((byte) (this.getTimeToLive() - 1));
+            this.setHops((byte) (this.getHops() + 1)); //fucked
 
             // Proliferate through network
-            pingOnwards(this, addr);
+            //this.pingOnwards(addr);
 
         }
 
 
-        // remember dont pong back to hosts own info
         // return 10 pongs from pongcaches (10 random atm)
         // PongMessage pong = new PongMessage(id,ttl,hops,payloadLength)
 
@@ -263,6 +241,7 @@ public class PingMessage extends MessageAbstract {
 
 
         // return hosts own pong
+        LOGGER.info(" PINGMESSAGE - RESPONDING WITH" + Arrays.toString(this.getBytesMessageID()) + this.getTimeToLive() + this.getHops());
         PongMessage.respond(this.getBytesMessageID(), this.getTimeToLive(), this.getHops(), addr);
 
 

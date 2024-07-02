@@ -15,10 +15,10 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 
-// Clean unnecessary shit
+// Clean unnecessary stuff
 public class ConnectionWorkerThread extends Thread {
     private final static Logger LOGGER = LoggerFactory.getLogger(ConnectionWorkerThread.class);
-    private Socket socket;
+    private Socket socket; // final?? !
     private final MessageFactoryImpl messageFactory;
 
     public ConnectionWorkerThread(Socket socket, MessageFactoryImpl messageFactory) {
@@ -28,22 +28,19 @@ public class ConnectionWorkerThread extends Thread {
 
     @Override
     public void run() {
+        LOGGER.info("Thread Started for " + socket.getInetAddress());
 
-        OutputStream outputStream = null;
-        InputStream inputStream = null;
 
         try {
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
-            LOGGER.info("Thread Started for " + socket.getInetAddress());
+            InputStream inputStream = socket.getInputStream();
+            //OutputStream outputStream = socket.getOutputStream(); // unused
 
-            InetAddress inetAddress = this.socket.getInetAddress();
-            int port = this.socket.getPort();
+            InetAddress inetAddress = socket.getInetAddress();
+            int port = socket.getPort();
 
             InetSocketAddress socketAddr = new InetSocketAddress(inetAddress, port);
 
-            MessageAbstract message = messageFactory.read(inputStream, socketAddr); // early code this has changed the way its used
-
+            messageFactory.read(inputStream, socketAddr);
 
             LOGGER.info("Connection Processing Finished.");
 
@@ -51,25 +48,14 @@ public class ConnectionWorkerThread extends Thread {
             LOGGER.info("Problem with communication", e);
 
         } finally {
-            if (inputStream != null) {
+            if (socket != null) {
                 try {
-                    inputStream.close();
+                    socket.close();
+                    LOGGER.info("Socket closed for " + socket.getInetAddress());
                 } catch (IOException e) {
+                    LOGGER.error("Error closing socket", e);
                 }
-            }
-
-            if (outputStream != null) try {
-                outputStream.close();
-            } catch (IOException e) {
-            }
-        }
-
-        if (socket != null) {
-            try {
-                socket.close();
-            } catch (IOException e) {
             }
         }
     }
 }
-

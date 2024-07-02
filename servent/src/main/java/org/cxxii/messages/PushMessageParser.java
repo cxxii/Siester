@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 
 public class PushMessageParser implements MessageParser{
     @Override
-    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
-        return null;
+    public void parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
     }
 }

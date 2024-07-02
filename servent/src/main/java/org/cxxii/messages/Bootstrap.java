@@ -19,6 +19,8 @@ public class Bootstrap {
     private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
 
     public static void pingBootstrapServer() throws IOException {
+        LOGGER.info("Pinging Bootstrap Server");
+
         URL url = new URL(bootstrapServerUrl);
         HttpURLConnection connection = null;
         InputStream inputStream = null;

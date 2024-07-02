@@ -24,7 +24,7 @@ public class PingMessageParser implements MessageParser {
 
 
         LOGGER.info("Parse start");
-        byte[] messageId = Arrays.copyOfRange(header, 0, 15);
+        byte[] messageId = Arrays.copyOfRange(header, 0, 16);
         byte typeId = header[16];
         byte timeToLive = header[17];
         byte hops = header[18];

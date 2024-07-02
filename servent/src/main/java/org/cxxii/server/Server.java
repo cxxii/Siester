@@ -63,7 +63,10 @@ public class Server {
     }
 
     private static void loadConfiguration() {
+        LOGGER.info("Loading Configuration...");
+
         ConfigManager configManager = ConfigManager.getInstance();
+
         try (InputStream inputStream = Server.class.getClassLoader().getResourceAsStream("serverconfig.json")) {
             if (inputStream == null) {
                 throw new FileNotFoundException("serverconfig.json not found in classpath");
@@ -80,6 +83,7 @@ public class Server {
 
 
     private static MessageFactoryImpl registerParsers(MessageFactoryImpl messageFactory) {
+        LOGGER.info("Registering Parsers...");
 
         messageFactory.setParser((byte) 0x00, new PingMessageParser());
         messageFactory.setParser((byte) 0x01, new PongMessageParser());
@@ -93,8 +97,6 @@ public class Server {
     private static void checkAndPingHosts() throws IOException {
 
         if (FileManager.checkHostCacheSize() == 0) {
-
-            LOGGER.info("Pinging Bootstrap Server");
 
             Bootstrap.pingBootstrapServer();
 

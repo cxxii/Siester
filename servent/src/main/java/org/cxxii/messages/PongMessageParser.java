@@ -26,11 +26,5 @@ public class PongMessageParser implements MessageParser {
         PongMessage pong = new PongMessage(timeToLive, hops, ipAddress, portNum, sharedFiles, kilobytesShared, payloadLength);
 
         return pong.process(addr);
-
-
     }
 }
-
-/**
- * Does this method need to actually return anything
- */

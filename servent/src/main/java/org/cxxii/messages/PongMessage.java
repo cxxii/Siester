@@ -66,23 +66,30 @@ public class PongMessage extends MessageAbstract {
      * @param sharedFiles
      * @param kilobytesShared
      */
-    public PongMessage(byte[] bytesMessageID, byte TYPE_ID, byte timeToLive, byte hops, byte payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
-        super(bytesMessageID, TYPE_ID, timeToLive, hops, payloadLength);
+//    public PongMessage(byte[] bytesMessageID, byte TYPE_ID, byte timeToLive, byte hops, byte payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
+//        super(bytesMessageID, TYPE_ID, timeToLive, hops, payloadLength);
+//        this.portNum = portNum;
+//        this.ipAddress = ipAddress;
+//        this.sharedFiles = sharedFiles;
+//        this.kilobytesShared = kilobytesShared;
+//    }
+
+    public PongMessage(byte[] pingID, byte TYPE_ID, byte timeToLive, byte hops, byte payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
+        super(TYPE_ID, timeToLive, hops, payloadLength);
+        this.pingID = pingID;
         this.portNum = portNum;
         this.ipAddress = ipAddress;
         this.sharedFiles = sharedFiles;
         this.kilobytesShared = kilobytesShared;
     }
 
+
+
     //usage?
     public PongMessage(byte typeId, byte timeToLive, byte hops, byte payloadLength) {
         super(typeId, timeToLive, hops, payloadLength);
     }
-
-    @Override
-    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
-        return null;
-    }
+    
 
 
     //To be removed..
@@ -118,45 +125,136 @@ public class PongMessage extends MessageAbstract {
 
     // METHODS
     public static void respond(byte[] pingID, byte timeToLive, byte hops, InetSocketAddress addr) {
+        LOGGER.info("RESPOND START");
         try {
-            // Load shared files and KB shared from host details
-            JsonObject hostDetails = Json.readJsonFromFile(FileManager.getHostDetailsPath().toString());
-            byte sharedFiles = hostDetails.get("sharedFiles").getAsByte();
-            int kbShared = hostDetails.get("kbShared").getAsInt();
 
-            // Load port and IP from server configuration
+            JsonObject hostDetails = Json.readJsonFromFile(FileManager.getHostDetailsPath().toString());
+            int sharedFiles = hostDetails.get("NumSharedFiles").getAsInt();
+            int kbShared = hostDetails.get("NumkilobytesShared").getAsInt();
+
             JsonObject serverConfig = Json.readJsonFromClasspath("serverconfig.json");
             int port = serverConfig.get("port").getAsInt();
             byte[] ip = Network.getLocalIpAddress();
 
-            // Create Pong message
-            PongMessage pong = new PongMessage(pingID, TYPE_ID, timeToLive, hops, PAYLOAD_LENGTH, port, ip, sharedFiles, kbShared);
 
-            // Send Pong message
-            sendPongMessage(pong, addr);
-            LOGGER.info("SENT PONG: " + pong.pingID + "to" + addr.getHostString());
+            PongMessage pong = new PongMessage(pingID, TYPE_ID, timeToLive, hops, PAYLOAD_LENGTH, port, ip, (byte) sharedFiles, kbShared); // not getting payload len
+            // ttl and hop nos set to 0,0
+
+
+            pong.sendPongMessage(addr);
+
+            LOGGER.info("SENT PONG: " + pong.toString() + " to " + addr.getHostString());
+
+            LOGGER.info("RESPOND END");
+
         } catch (IOException e) {
             LOGGER.error("Error responding to ping", e);
         }
     }
 
-    private static void sendPongMessage(PongMessage pong, InetSocketAddress addr) {
+    private void sendPongMessage(InetSocketAddress addr) {
+        LOGGER.info("SEND PONG MESSAGE START");
         String ip = addr.getAddress().getHostAddress();
-        int port = addr.getPort();
-        LOGGER.debug("TRYING TO SEND TO " + ip + " " + port);
+        int port = 6364;
+
+        // Log details before sending
+        LOGGER.debug("Attempting to PONG " + ip + " " + port);
+        LOGGER.debug("Pong message ID: " + Arrays.toString(this.getPingID()));
+        LOGGER.debug("SENDPONGMESSAGE = " + this);
 
         try (Socket socket = new Socket(ip, port);
              OutputStream outputStream = socket.getOutputStream()) {
 
-            outputStream.write(pong.serializeMessage());
-            outputStream.flush();
+            outputStream.write(this.serializeMessage());
+            outputStream.close();
+
+            LOGGER.info("Successfully sent Pong message to " + ip + ":" + port);
+
+            LOGGER.info("SEND PONG MESSAGE END");
 
         } catch (IOException e) {
             LOGGER.error("Failed to send Pong message to " + ip + ":" + port, e);
         }
     }
 
-    public byte[] serializeMessage() throws IOException {
+
+//    private static void sendPongMessage(PongMessage pong, InetSocketAddress addr) {
+//        String ip = addr.getAddress().getHostAddress();
+//        int port = 6364;
+//        LOGGER.debug("TRYING TO SEND TO " + ip + " " + port);
+//
+//        try (Socket socket = new Socket(ip, port);
+//             OutputStream outputStream = socket.getOutputStream()) {
+//
+//            outputStream.write(pong.serializeMessage());
+//            outputStream.flush();
+//
+//        } catch (IOException e) {
+//            LOGGER.error("Failed to send Pong message to " + ip + ":" + port, e);
+//        }
+//    }
+
+//    private byte[] serializeMessage() throws IOException {
+//        if (this.getPingID() == null) {
+//            throw new NullPointerException("pingID is null");
+//        }
+//        if (this.getIpAddress() == null) {
+//            throw new NullPointerException("ipAddressBytes is null");
+//        }
+//
+//        ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + PAYLOAD_LENGTH); // 23 + 13
+//        buffer.order(ByteOrder.BIG_ENDIAN);
+//
+//
+//        buffer.put(this.getPingID());
+//
+//        buffer.put(TYPE_ID);
+//
+//        buffer.put(this.getTimeToLive());
+//
+//        buffer.put(this.getHops());
+//
+//        buffer.putInt(PAYLOAD_LENGTH);
+//
+//        buffer.putShort(this.getPortNum()); // this might need to be 6364
+//
+//        buffer.put(Network.getLocalIpAddress());
+//
+//        buffer.put(this.getSharedFiles());
+//
+//        buffer.putInt(this.getKilobytesShared());
+//
+//        return buffer.array();
+//    }
+
+//    private byte[] serializeMessage() throws IOException {
+//        if (this.getPingID() == null) {
+//            throw new NullPointerException("pingID is null");
+//        }
+//        if (this.getIpAddress() == null) {
+//            throw new NullPointerException("ipAddressBytes is null");
+//        }
+//
+//        // Correct buffer size calculation
+//        final int HEADER_LENGTH = 23;
+//        final int PAYLOAD_LENGTH = 13;
+//        ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + PAYLOAD_LENGTH); // 23 + 13 = 36 bytes
+//        buffer.order(ByteOrder.BIG_ENDIAN);
+//
+//        buffer.put(this.getPingID()); // 16 bytes
+//        buffer.put(TYPE_ID); // 1 byte
+//        buffer.put(this.getTimeToLive()); // 1 byte
+//        buffer.put(this.getHops()); // 1 byte
+//        buffer.putInt(PAYLOAD_LENGTH); // 1 byte
+//        buffer.putShort(this.getPortNum()); // 2 bytes
+//        buffer.put(this.getIpAddress()); // 4 bytes
+//        buffer.put(this.getSharedFiles()); // 1 byte
+//        buffer.putInt(this.getKilobytesShared()); // 4 bytes
+//
+//        return buffer.array();
+//    }
+
+    private byte[] serializeMessage() throws IOException {
         if (this.getPingID() == null) {
             throw new NullPointerException("pingID is null");
         }
@@ -164,29 +262,35 @@ public class PongMessage extends MessageAbstract {
             throw new NullPointerException("ipAddressBytes is null");
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + PAYLOAD_LENGTH); // 23 + 13
+        final int HEADER_LENGTH = 23;
+//        final int PAYLOAD_LENGTH = 13;
+        ByteBuffer buffer = ByteBuffer.allocate(37); // TODO - REMVE HARDCODE
         buffer.order(ByteOrder.BIG_ENDIAN);
 
+        LOGGER.debug("Allocating buffer of size: " + (HEADER_LENGTH + PAYLOAD_LENGTH));
 
-        buffer.put(this.getPingID());
+        buffer.put(this.getPingID()); // 16 bytes
+        buffer.put(TYPE_ID); // 1 byte
+        buffer.put(this.getTimeToLive()); // 1 byte  // regain the 7 7 on ttll and hops
+        buffer.put(this.getHops()); // 1 byte
+        buffer.putInt(14); // 4 bytes // TODO remove - hardcode
 
-        buffer.put(TYPE_ID);
+        buffer.putShort((short)6364); // 2 bytes // TODO - remove hardcode
+        buffer.put(this.getIpAddress()); // 4 bytes
+        buffer.put(this.getSharedFiles()); // 1 byte
+        buffer.putInt(this.getKilobytesShared()); // 4 bytes
 
-        buffer.put(this.getTimeToLive());
+        byte[] serializedMessage = buffer.array();
 
-        buffer.put(this.getHops());
+        LOGGER.debug("PingID: " + Arrays.toString(this.getPingID()));
+        LOGGER.debug("IP Address: " + Arrays.toString(this.getIpAddress()));
+        LOGGER.debug("Port Number: " + this.getPortNum());
+        LOGGER.debug("Shared Files: " + this.getSharedFiles()); // OK
+        LOGGER.debug("Kilobytes Shared: " + this.getKilobytesShared()); // OK
+        LOGGER.debug("Serialized message: " + Arrays.toString(serializedMessage));  // OK
+        LOGGER.debug("Serialized message length: " + serializedMessage.length); // OK
 
-        buffer.putInt(PAYLOAD_LENGTH);
-
-        buffer.putShort(this.getPortNum());
-
-        buffer.put(Network.getLocalIpAddress());
-
-        buffer.put(this.getSharedFiles());
-
-        buffer.putInt(this.getKilobytesShared());
-
-        return buffer.array();
+        return serializedMessage;
     }
 
     public PongMessage process(InetSocketAddress addr) throws IOException {
@@ -251,11 +355,20 @@ public class PongMessage extends MessageAbstract {
         //return pongs;
     }
 
+    @Override
+    public String toString() {
+        return "PongMessage{" +
+                "pingID=" + Arrays.toString(pingID) +
+                ", PayloadLength=" + PayloadLength +
+                ", timeToLive=" + timeToLive +
+                ", hops=" + hops +
+                ", portNum=" + portNum +
+                ", sharedFiles=" + sharedFiles +
+                ", kilobytesShared=" + kilobytesShared +
+                '}';
+    }
 
-
-
-
-    // TODO
+// TODO
     //  save incoming host info
     /**
      *

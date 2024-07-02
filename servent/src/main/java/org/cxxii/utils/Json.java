@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import net.bytebuddy.description.method.MethodDescription;
+import org.cxxii.messages.PingMessage;
 import org.cxxii.server.Server;
+import org.cxxii.server.SocketAddr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -16,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Json {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(Json.class);
 
     private static ObjectMapper myObjectMapper = defaultObjectMapper();
 
@@ -65,9 +71,9 @@ public class Json {
         final String FILE_PATH = String.valueOf(FileManager.getHostCachePath());
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type listType = new TypeToken<List<Socket>>() {}.getType();
+        Type listType = new TypeToken<List<SocketAddr>>() {}.getType();
 
-        List<Socket> sockets;
+        List<SocketAddr> sockets;
         try (FileReader reader = new FileReader(FILE_PATH)) {
             JsonElement jsonElement = JsonParser.parseReader(reader);
             if (jsonElement.isJsonArray()) {
@@ -77,11 +83,27 @@ public class Json {
             }
         }
 
-        Socket newSocket = new Socket(address.getAddress(), address.getPort());
+        // TODO - GET PORT FROM SETTINGS
+        SocketAddr newSocket = new SocketAddr(address.getAddress(), 6364);
         sockets.add(newSocket);
 
         try (FileWriter writer = new FileWriter(FILE_PATH)) {
             gson.toJson(sockets, writer);
+        }
+    }
+
+    public static void writeDefaultHostDetails() throws IOException {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        HostDetailsJson hostDetailsJson = new HostDetailsJson(0, 0);
+
+        try (FileWriter writer = new FileWriter(FileManager.getHostDetailsPath().toFile())) {
+            gson.toJson(hostDetailsJson, writer);
+            LOGGER.info("Default host details written");
+        } catch (IOException e) {
+            LOGGER.error("Failed to write default host details: ", e);
+            throw new RuntimeException("ERROR writing JSON host details: ", e);
         }
     }
 
