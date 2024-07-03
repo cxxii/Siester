@@ -60,8 +60,12 @@ public class FileManager {
                 throw new RuntimeException("ERROR while creating file: " + file.getAbsolutePath(), e);
             }
         } else {
-            LOGGER.info("Directory exists file " + file.getAbsolutePath());
+            LOGGER.info("File exists... " + file.getAbsolutePath());
         }
+    }
+
+    public static void CheckAndCreateFilePublic(File file) {
+        checkAndCreateFile(file);
     }
 
 
@@ -70,22 +74,22 @@ public class FileManager {
 
         // Get directory
         File mainDirectory = new File(USER_HOME, DIRECTORY_NAME);
-        File pongDirectory = new File(USER_HOME, PONG_DIRECTORY);
         File hostDirectory = new File(USER_HOME, HOST_DIRECTORY);
         File logDirectory = new File(USER_HOME, LOG_DIRECTORY);
         File sharedDirectory = new File(USER_HOME, SHARED_DIRECTORY);
         File downloadDirectory = new File(USER_HOME, DOWNLOAD_DIRECTORY);
         File uploadDirectory = new File(USER_HOME, UPLOAD_DIRECTORY);
+        File pongDirectory = new File(USER_HOME, PONG_DIRECTORY);
 
 
         // Checks n Creates Dir
         checkAndCreateDir(mainDirectory);
-        checkAndCreateDir(pongDirectory);
         checkAndCreateDir(hostDirectory);
         checkAndCreateDir(logDirectory);
         checkAndCreateDir(sharedDirectory);
         checkAndCreateDir(uploadDirectory);
         checkAndCreateDir(downloadDirectory);
+        checkAndCreateDir(pongDirectory);
 
         // Checks n Creates Files
         checkAndCreateFile(new File(hostDirectory, HOST_CACHE));
@@ -106,8 +110,6 @@ public class FileManager {
         return Files.size(getHostDetailsPath());
     }
 
-
-
     public static Path getHostCachePath() {
         return getPath(HOST_DIRECTORY, HOST_CACHE);
     }
@@ -117,8 +119,9 @@ public class FileManager {
     }
 
     public static Path getNodePongDirPath() {
-        return getPath(DIRECTORY_NAME, PONG_DIRECTORY);
+        return Paths.get(USER_HOME,PONG_DIRECTORY);
     }
+
     public static Path getUploadDirPath() {
         return getPath(DIRECTORY_NAME, UPLOAD_DIRECTORY);
     }

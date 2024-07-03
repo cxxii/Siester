@@ -29,7 +29,8 @@ public class MessageFactoryImpl implements MessageFactory {
 
 
     public MessageAbstract read(InputStream in, InetSocketAddress addr) throws IOException {
-        LOGGER.info("Reading Start");
+        LOGGER.info("Message received!");
+        LOGGER.info("Reading Start...");
         byte[] header = new byte[HEADER_LENGTH];
 
         int bytesRead = 0;
@@ -45,11 +46,11 @@ public class MessageFactoryImpl implements MessageFactory {
 
         // Read payload length
         byte[] payloadLengthBytes = Arrays.copyOfRange(header, 19, 23);
-        LOGGER.info("READ - PAYLLENBYTE " + Arrays.toString(payloadLengthBytes));
+        LOGGER.debug("Payload len byte[] =" + Arrays.toString(payloadLengthBytes));
         ByteBuffer wrapped = ByteBuffer.wrap(payloadLengthBytes);
 
         int payloadLength = wrapped.getInt();
-        LOGGER.debug("Payload length is " + payloadLength);
+        LOGGER.debug("Payload len int = " + payloadLength);
 
         byte[] payload = new byte[payloadLength];
         int totalBytesRead = 0;

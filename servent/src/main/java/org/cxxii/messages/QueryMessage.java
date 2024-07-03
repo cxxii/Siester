@@ -119,11 +119,6 @@ public class QueryMessage extends MessageAbstract {
     }
 
 
-    @Override
-    public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
-        return null;
-    }
-
     private byte[] UUIDtoByteArray(UUID uuid) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(16);
         byteBuffer.putLong(uuid.getMostSignificantBits());

@@ -66,7 +66,7 @@ public class Ping_to_delete extends MessageAbstract {
         this.hops = hops;
     }
 
-    @Override
+
     public MessageAbstract parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
         return null;
     }

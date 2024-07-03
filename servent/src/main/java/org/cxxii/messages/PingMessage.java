@@ -79,26 +79,19 @@ public class PingMessage extends MessageAbstract {
 
     // move?
     private static byte[] serializeMessage(PingMessage message) throws IOException {
-        LOGGER.info("Serialization began");
+        LOGGER.info("Serializaing PING");
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        // Write the UUID
-        byte[] ping_ID_debug = message.UUIDtoByteArray(message.getMessageID());
-        outputStream.write(ping_ID_debug);
 
-        LOGGER.info("PING BYTE ID = " + Arrays.toString(ping_ID_debug));
+        outputStream.write(message.UUIDtoByteArray(message.getMessageID()));
 
-        // Write the message type (Ping_to_delete)
         outputStream.write(Byte.toUnsignedInt(message.getTypeId()));
 
-        // Write the TTL
         outputStream.write(Byte.toUnsignedInt(message.getTimeToLive()));
 
-        // Write the Hops
         outputStream.write(Byte.toUnsignedInt(message.getHops()));
 
-        // Write the payload length (4 bytes, big-endian)
         ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
         lengthBuffer.putInt(message.getPayloadLength());
         outputStream.write(lengthBuffer.array());
@@ -132,7 +125,7 @@ public class PingMessage extends MessageAbstract {
 
 
     public static void startPings() throws SocketException, UnknownHostException {
-        LOGGER.info("PINGING cached hosts...");
+        LOGGER.info("Begin start up PING protocol...");
 
         String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
 
@@ -141,6 +134,7 @@ public class PingMessage extends MessageAbstract {
         if (hosts != null) {
             for (SocketAddr host : hosts) {
                 if (!host.getIp().getHostAddress().equals(ipString)) {
+                    LOGGER.info("Creating PING");
                     PingMessage ping = new PingMessage();
                     ping.sendPing(host);
                 }
@@ -161,7 +155,7 @@ public class PingMessage extends MessageAbstract {
                     outputStream.write(serializedPing);
                     outputStream.flush();
 
-                    LOGGER.info("PING sent" + Arrays.toString(serializedPing) + "To: " + host.getIp());
+                    LOGGER.info("PING Sent: " + Arrays.toString(serializedPing) + " Destination: " + host.getIp());
 
                     break;
 
@@ -182,14 +176,14 @@ public class PingMessage extends MessageAbstract {
     }
 
     private void pingOnwards(InetSocketAddress addr) {
-        LOGGER.info("PINGING ONWARDS");
+        LOGGER.info("PINGING onwards...");
 
         List<SocketAddr> hosts = readHostCache();
 
         if (this.getTimeToLive() < 0)
 
             for (SocketAddr host : hosts) {
-                if (!host.getIp().equals(addr)) {
+                if (!host.getIp().equals(addr.getAddress())) { // TODO check this works as expected
                     this.sendPing(host);
                 }
             }
@@ -209,8 +203,7 @@ public class PingMessage extends MessageAbstract {
 
 
     protected PingMessage process(InetSocketAddress addr) throws IOException {
-
-        LOGGER.info("Processing PING.");
+        LOGGER.info("Processing PING...");
 
 
         // Check and saves host in file
@@ -222,11 +215,13 @@ public class PingMessage extends MessageAbstract {
         LOGGER.info("PING HOPS = " + this.getHops()); // ok
         if (this.getTimeToLive() != 0) {
 
-            this.setHops((byte) (this.getTimeToLive() - 1));
-            this.setHops((byte) (this.getHops() + 1)); //fucked
+            this.setTimeToLive((byte) (this.getTimeToLive() - 1));
+            this.setHops((byte) (this.getHops() + 1));
 
-            // Proliferate through network
-            //this.pingOnwards(addr);
+            LOGGER.debug("NEW GET HOPS " + this.getHops());
+            LOGGER.debug("NEW GET TTL " + this.getTimeToLive());
+
+            this.pingOnwards(addr);
 
         }
 

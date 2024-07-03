@@ -107,6 +107,22 @@ public class Json {
         }
     }
 
+
+    public static void writeNodePongDetails() throws IOException {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        HostDetailsJson hostDetailsJson = new HostDetailsJson(0, 0);
+
+        try (FileWriter writer = new FileWriter(FileManager.getHostDetailsPath().toFile())) {
+            gson.toJson(hostDetailsJson, writer);
+            LOGGER.info("Set Default host details: FilesShared = 0, KbShared = 0");
+        } catch (IOException e) {
+            LOGGER.error("Failed to write default host details: ", e);
+            throw new RuntimeException("ERROR writing JSON host details: ", e);
+        }
+    }
+
     public static JsonObject readJsonFromClasspath(String classpath) throws IOException {
         try (InputStream inputStream = Server.class.getClassLoader().getResourceAsStream(classpath);
              Reader reader = new InputStreamReader(inputStream)) {

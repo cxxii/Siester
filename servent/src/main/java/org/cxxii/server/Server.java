@@ -38,11 +38,6 @@ public class Server {
             // check host caches etc
             checkAndPingHosts(); // OK
 
-            // DEBUGGING purpose
-            String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
-            LOGGER.debug("Local IP address: " + ipString);
-
-
 //            CLI.loop();
 
 
@@ -80,7 +75,6 @@ public class Server {
             throw new RuntimeException(e);
         }
     }
-
 
     private static MessageFactoryImpl registerParsers(MessageFactoryImpl messageFactory) {
         LOGGER.info("Registering Parsers...");

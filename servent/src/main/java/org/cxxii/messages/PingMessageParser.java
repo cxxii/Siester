@@ -21,9 +21,8 @@ public class PingMessageParser implements MessageParser {
 
     @Override
     public PingMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
+        LOGGER.info("PING Parse start...");
 
-
-        LOGGER.info("Parse start");
         byte[] messageId = Arrays.copyOfRange(header, 0, 16);
         byte typeId = header[16];
         byte timeToLive = header[17];

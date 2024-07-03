@@ -76,7 +76,5 @@ public class Bootstrap {
                 connection.disconnect();
             }
         }
-
-        LOGGER.info("Contine");
     }
 }
