@@ -1,79 +1,61 @@
 package org.cxxii.messages;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import net.bytebuddy.description.method.MethodDescription;
+import org.cxxii.messages.MessageAbstract;
+import org.cxxii.messages.PongMessage;
 import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
+import org.cxxii.utils.HostCacheReader;
 import org.cxxii.utils.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class PingMessage extends MessageAbstract {
 
-    // LOGGER
     private final static Logger LOGGER = LoggerFactory.getLogger(PingMessage.class);
-
-
-    // CONSTANTS
     private static final byte TYPE_ID = 0x00;
-    private static final byte PAYLOAD_LENGTH = 0x00000000;
-
-
-    // INSTANCE
-    private byte timeToLive = (byte) 0x07;
-    private byte hops = (byte) 0x00;
-
-
-    // TODO - CHANGE HOW THIS WORKS
+    private static final byte PAYLOAD_LENGTH = 0x00;
     private static final int MAX_RETRIES = 2;
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
-
-
-    /**
-     * Used for initial Creation of pings
-     */
     public PingMessage() {
         super(TYPE_ID, (byte) 0x07, (byte) 0x00, PAYLOAD_LENGTH);
     }
 
-
-    /**
-     * Used for the passing on Pings
-     *
-     * @param bytesMessageID
-     * @param typeId
-     * @param timeToLive
-     * @param hops
-     * @param payloadLength
-     * @param payload
-     */
     public PingMessage(byte[] bytesMessageID, byte typeId, byte timeToLive, byte hops, byte payloadLength) {
         super(bytesMessageID, typeId, timeToLive, hops, payloadLength);
     }
 
+    public static void startPings() throws SocketException, UnknownHostException {
+        LOGGER.info("Pinging all known hosts...");
 
-    // move?
-    private byte[] UUIDtoByteArray(UUID uuid) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(16);
-        byteBuffer.putLong(uuid.getMostSignificantBits());
-        byteBuffer.putLong(uuid.getLeastSignificantBits());
-        return byteBuffer.array();
+        String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
+        List<SocketAddr> hosts = HostCacheReader.readHostCache();
+
+        LOGGER.info("Known network size: " + hosts.size());
+
+        if (hosts != null) {
+            for (SocketAddr host : hosts) {
+                if (!host.getIp().getHostAddress().equals(ipString)) {
+                    LOGGER.info("Creating PING");
+                    PingMessage ping = new PingMessage();
+                    ping.sendPing(host);
+                }
+            }
+        }
     }
 
 
@@ -102,63 +84,54 @@ public class PingMessage extends MessageAbstract {
         return outputStream.toByteArray();
     }
 
+    public static void pingPongCache() {
+        LOGGER.info("****** RUNNING PING PONG CACHE ******");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(FileManager.getPongCachePath().toFile());
+
+            for (JsonNode node : rootNode) {
+
+                String ipAddress = node.get("ipAddress").asText();
+
+                SocketAddr addr = new SocketAddr(InetAddress.getByName(ipAddress), node.get("portNum").asInt());
+
+                PingMessage ping = new PingMessage();
+
+                LOGGER.debug(addr.toString());
+
+                ping.sendPing(addr);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private byte[] UUIDtoByteArray(UUID uuid) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(16);
+        byteBuffer.putLong(uuid.getMostSignificantBits());
+        byteBuffer.putLong(uuid.getLeastSignificantBits());
+        return byteBuffer.array();
+    }
+
     private int getPayloadLength() {
         return PAYLOAD_LENGTH;
     }
 
-    //move to util class? // YES // used elsewhere
-    // BUG - JSON bug in here - gson
-    public static List<SocketAddr> readHostCache() {
-        LOGGER.info("Reading hostcache");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<SocketAddr> addresses = null;
-
-        try {
-            addresses = objectMapper.readValue(new File(String.valueOf(FileManager.getHostCachePath().toFile())), new TypeReference<List<SocketAddr>>() {});
-        } catch (IOException e) {
-            LOGGER.error("Could not read hostcache", e);
-        }
-
-        return addresses;
-    }
-
-
-    public static void startPings() throws SocketException, UnknownHostException {
-        LOGGER.info("Begin start up PING protocol...");
-
-        String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
-
-        List<SocketAddr> hosts = readHostCache();
-
-        if (hosts != null) {
-            for (SocketAddr host : hosts) {
-                if (!host.getIp().getHostAddress().equals(ipString)) {
-                    LOGGER.info("Creating PING");
-                    PingMessage ping = new PingMessage();
-                    ping.sendPing(host);
-                }
-            }
-        }
-    }
-
     private void sendPing(SocketAddr host) {
-
         executorService.submit(() -> {
-
             for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try (Socket socket = new Socket(host.getIp(), host.getPort());
                      OutputStream outputStream = socket.getOutputStream()) {
 
                     byte[] serializedPing = serializeMessage(this);
-
                     outputStream.write(serializedPing);
                     outputStream.flush();
-
                     LOGGER.info("PING Sent: " + Arrays.toString(serializedPing) + " Destination: " + host.getIp());
-
                     break;
-
                 } catch (IOException e) {
                     LOGGER.error("Attempt " + attempt + " FAILED to send PING to: " + host.getIp() + ":" + host.getPort(), e);
                     if (attempt == MAX_RETRIES) {
@@ -175,22 +148,8 @@ public class PingMessage extends MessageAbstract {
         });
     }
 
-    private void pingOnwards(InetSocketAddress addr) {
-        LOGGER.info("PINGING onwards...");
-
-        List<SocketAddr> hosts = readHostCache();
-
-        if (this.getTimeToLive() < 0)
-
-            for (SocketAddr host : hosts) {
-                if (!host.getIp().equals(addr.getAddress())) { // TODO check this works as expected
-                    this.sendPing(host);
-                }
-            }
-    }
-
     private static boolean checkHostInCache(InetAddress addr) {
-        List<SocketAddr> sockets = readHostCache();
+        List<SocketAddr> sockets = HostCacheReader.readHostCache();
 
         for (SocketAddr socket : sockets) {
             if (socket.getIp().equals(addr)) {
@@ -201,54 +160,30 @@ public class PingMessage extends MessageAbstract {
         return false;
     }
 
+    private static void ttlAndHopsIncrementor(MessageAbstract messageAbstract) {
+
+        messageAbstract.setTimeToLive((byte) (messageAbstract.getTimeToLive() - 1));
+        messageAbstract.setHops((byte) (messageAbstract.getHops() + 1));
+    }
 
     protected PingMessage process(InetSocketAddress addr) throws IOException {
         LOGGER.info("Processing PING...");
 
-
-        // Check and saves host in file
         if (!checkHostInCache(addr.getAddress())) {
             Json.appendToHostCacheJson(addr);
         }
 
-        LOGGER.info("PING TTL = " + this.getTimeToLive()); // ok
-        LOGGER.info("PING HOPS = " + this.getHops()); // ok
         if (this.getTimeToLive() != 0) {
-
-            this.setTimeToLive((byte) (this.getTimeToLive() - 1));
-            this.setHops((byte) (this.getHops() + 1));
-
-            LOGGER.debug("NEW GET HOPS " + this.getHops());
-            LOGGER.debug("NEW GET TTL " + this.getTimeToLive());
-
-            this.pingOnwards(addr);
-
+            ttlAndHopsIncrementor(this);
         }
 
-
-        // return 10 pongs from pongcaches (10 random atm)
-        // PongMessage pong = new PongMessage(id,ttl,hops,payloadLength)
-
-
-
-        // pass info on to the ping factory to make pings and host to my host cache
-
-
-
-        // return hosts own pong
-        LOGGER.info(" PINGMESSAGE - RESPONDING WITH" + Arrays.toString(this.getBytesMessageID()) + this.getTimeToLive() + this.getHops());
         PongMessage.respond(this.getBytesMessageID(), this.getTimeToLive(), this.getHops(), addr);
 
+        LOGGER.debug("SEND PONG CACHE START!!");
+        PongMessage.sendPongCache(addr, this);
+        LOGGER.debug("SEND PONG CACHE END!!");
 
         return this;
-
     }
-
 }
 
-// IN THE GENERAL PONG CACHE TAKE THE 10 LATEST PONGS ONE FROM EACH FILE - GOOD PRACTICE TO HAVE DIFFERENT HOP VALUES!!
-// GENERAL CACHE OR JUST A METHOD TO EXTRACT THE 10 ON DEMAND? MAYBE THIS!?!?
-
-// NEED A FILE FOR HISTORIC HOSTS
-// PING A HOST - GET A RESPONSE - SAVE THEIR INFO IN ALL-TIME HOST FILE AND CURRENT HOST FILE
-// PONGS YOU RESPONDE WITH MATCH THE PING ID

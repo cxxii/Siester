@@ -1,5 +1,6 @@
 package org.cxxii.server;
 
+import org.cxxii.Scheduler;
 import org.cxxii.gui.CLI;
 import org.cxxii.messages.*;
 import org.cxxii.network.Network;
@@ -9,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.cxxii.utils.FileManager;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 import static org.cxxii.messages.PingMessage.startPings;
 
@@ -23,8 +26,6 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         try {
-
-
 
             // Loads config file
             loadConfiguration(); // OK
@@ -38,9 +39,15 @@ public class Server {
             // check host caches etc
             checkAndPingHosts(); // OK
 
-//            CLI.loop();
+            // pings
+            //Scheduler.startPingCacheUpdates(0, 35, TimeUnit.SECONDS); // OK
+
+            Scheduler.startPingHostCache(0, 25, TimeUnit.SECONDS); // OK
+
+            Scheduler.startPongCacheUpdates(0, 20, TimeUnit.SECONDS); // OK
 
 
+            //            CLI.loop();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -54,6 +61,7 @@ public class Server {
         registerParsers(messageFactory);
 
         ServerListenerThread serverListenerThread = new ServerListenerThread(config.getPort(), config.getWebroot(), messageFactory);
+
         serverListenerThread.start();
     }
 
@@ -96,7 +104,7 @@ public class Server {
 
         } else {
 
-            LOGGER.info("Hosts found in cache");
+            LOGGER.info("HostsJson found in cache");
         }
 
         PingMessage.startPings();

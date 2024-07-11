@@ -3,6 +3,7 @@ package org.cxxii.messages;
 import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
+import org.cxxii.utils.HostCacheReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,14 +184,13 @@ public class QueryMessage extends MessageAbstract {
 
     public static void makeQuery() {
 
-        List<SocketAddr> hosts = PingMessage.readHostCache(); // change
+        List<SocketAddr> hosts = HostCacheReader.readHostCache();
 
         String usersQuery = getUsersQuery();
 
         byte queryLength = (byte) getPayloadLength(usersQuery);
 
         QueryMessage queryMessage = new QueryMessage(queryLength, usersQuery);
-
 
         for (SocketAddr host : hosts) {
             sendQuery(host, queryMessage);

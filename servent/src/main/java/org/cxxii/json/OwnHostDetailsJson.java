@@ -1,16 +1,16 @@
-package org.cxxii.utils;
+package org.cxxii.json;
 
-public class HostDetailsJson {
+public class OwnHostDetailsJson {
     private int NumSharedFiles;
     private int NumkilobytesShared;
 
     // Default constructor
-    public HostDetailsJson() {
+    public OwnHostDetailsJson() {
         this(0, 0);
     }
 
     // Parameterized constructor
-    public HostDetailsJson(int numSharedFiles, int numkilobytesShared) {
+    public OwnHostDetailsJson(int numSharedFiles, int numkilobytesShared) {
         this.NumSharedFiles = numSharedFiles;
         this.NumkilobytesShared = numkilobytesShared;
     }

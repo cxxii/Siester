@@ -7,7 +7,7 @@ import java.util.UUID;
 public abstract class MessageAbstract {
 
     private UUID messageID;
-    private byte[] bytesMessageID;
+    byte[] bytesMessageID;
     private byte typeId;
     private byte timeToLive;
     private byte hops;

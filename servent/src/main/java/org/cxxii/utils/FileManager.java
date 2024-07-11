@@ -1,17 +1,18 @@
 package org.cxxii.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.gson.*;
+import org.cxxii.json.NodePongJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.cxxii.utils.Json.writeDefaultHostDetails;
+import java.util.*;
 
 public class FileManager {
 
@@ -69,7 +70,7 @@ public class FileManager {
     }
 
 
-    public static void  performFileChecks() throws IOException {
+    public static void performFileChecks() throws IOException {
         LOGGER.info("Performing file checks");
 
         // Get directory
@@ -118,8 +119,12 @@ public class FileManager {
         return getPath(DIRECTORY_NAME, HOST_DETAILS);
     }
 
+    public static Path getPongCachePath() {
+        return getPath(DIRECTORY_NAME, PONG_CACHE);
+    }
+
     public static Path getNodePongDirPath() {
-        return Paths.get(USER_HOME,PONG_DIRECTORY);
+        return Paths.get(USER_HOME, PONG_DIRECTORY);
     }
 
     public static Path getUploadDirPath() {
@@ -133,8 +138,15 @@ public class FileManager {
 
     public static void writeHostsToFile(InputStream inputStream) throws IOException {
 
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        JsonElement jsonElement = JsonParser.parseReader(inputStreamReader);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = gson.toJson(jsonElement);
+
         try {
-            Files.write(getHostCachePath(), inputStream.readAllBytes());
+            Files.writeString(getHostCachePath(), prettyJson);
+
+
             LOGGER.info("Hosts written to host cache successfully");
         } catch (IOException e) {
             LOGGER.error("Error writing host cache file", e);
@@ -147,6 +159,56 @@ public class FileManager {
                     LOGGER.error("Error closing InputStream", e);
                 }
             }
+        }
+    }
+
+    // BUG
+    public synchronized static void pongCacheGenerator() {
+        LOGGER.debug("Generating fresh pongcache...");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+
+        try {
+            File nodePongDir = FileManager.getNodePongDirPath().toFile();
+            File[] nodeCache = Objects.requireNonNull(nodePongDir.listFiles(), "Node pong directory is empty or does not exist");
+
+            int numPongFiles = nodeCache.length;
+            List<NodePongJson> pongList = new ArrayList<>();
+
+            // Basic - network is small, send all pongs regardless
+            if (numPongFiles < 20) {
+                for (File node : nodeCache) {
+                    List<NodePongJson> nodePongs = objectMapper.readValue(node, new TypeReference<List<NodePongJson>>() {});
+
+                    Random random = new Random();
+
+                    if (!nodePongs.isEmpty()) {
+                        int randomPick = random.nextInt(nodePongs.size());
+                        pongList.add(nodePongs.get(randomPick));
+                        LOGGER.debug("Added to PONG LIST: {}", nodePongs.get(randomPick).toString());
+                    } else {
+                        LOGGER.warn("Node Pongs list is empty");
+                    }
+                }
+
+                writePongCacheToFile(pongList, objectWriter);
+            } else {
+                LOGGER.debug("IMPLEMENT ADVANCED PONGCACHE SYS");
+                // Implement more advanced caching if needed, for example, based on the age of pongs, etc.
+            }
+        } catch (Exception e) {
+            LOGGER.error("An error occurred during PONG CACHE generation", e);
+        }
+    }
+
+    private static void writePongCacheToFile(List<NodePongJson> pongs, ObjectWriter objectWriter) {
+        try (FileWriter fileWriter = new FileWriter(FileManager.getPongCachePath().toFile())) {
+            String jsonString = objectWriter.writeValueAsString(pongs);
+            fileWriter.write(jsonString);
+            LOGGER.debug("Writing to file PONGCACHE");
+        } catch (IOException e) {
+            LOGGER.error("Error writing PONG CACHE to file", e);
         }
     }
 }

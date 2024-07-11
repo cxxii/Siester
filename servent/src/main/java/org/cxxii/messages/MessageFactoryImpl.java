@@ -46,11 +46,9 @@ public class MessageFactoryImpl implements MessageFactory {
 
         // Read payload length
         byte[] payloadLengthBytes = Arrays.copyOfRange(header, 19, 23);
-        LOGGER.debug("Payload len byte[] =" + Arrays.toString(payloadLengthBytes));
         ByteBuffer wrapped = ByteBuffer.wrap(payloadLengthBytes);
 
         int payloadLength = wrapped.getInt();
-        LOGGER.debug("Payload len int = " + payloadLength);
 
         byte[] payload = new byte[payloadLength];
         int totalBytesRead = 0;
@@ -96,37 +94,3 @@ public class MessageFactoryImpl implements MessageFactory {
         return parsers.get(functionId);
     }
 }
-
-//    public void getMessage(byte typeID) {
-//        if (typeID == (byte) 0x00) {
-//            MessageFactory.createMessage()
-//        }
-//        //
-//    }
-
-
-    //
-//    public static MessageAbstract createMessage(String type, byte timeToLive, byte hops, String ipAddress, int port, int numberOfFilesShared, int numberOfKilobytesShared) {
-//        switch (type) {
-//            case "PING":
-//                return new PingMessage(timeToLive, hops);
-//            case "PONG":
-//                return new PongMessage(timeToLive, hops, ipAddress, port, numberOfFilesShared, numberOfKilobytesShared);
-//            // Add cases for other message types as needed
-//            default:
-//                throw new IllegalArgumentException("Unknown message type: " + type);
-//        }
-//    }
-//
-//    public static MessageAbstract createMessage(String type, byte timeToLive, byte hops) {
-//        switch (type) {
-//            case "PING":
-//                return new PingMessage(timeToLive, hops);
-//            case "PONG":
-//                System.out.println("PONG");
-//            // Add cases for other message types as needed
-//            default:
-//                throw new IllegalArgumentException("Unknown message type: " + type);
-//        }
-//    }
-

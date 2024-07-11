@@ -6,18 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="json changes&#10;bug fix on message ids">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/servent/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessageParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping_to_delete.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping_to_delete.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PushMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PushMessageParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/network/Network.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/network/Network.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/ConnectionWorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/ConnectionWorkerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostDetailsJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/json/OwnHostDetailsJson.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/Json.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/Json.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/NodePongJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/json/NodePongJson.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,27 +60,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/callum/Documents/Coding/repos/siester",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.44899738",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.postfix.templates",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/callum/Documents/Coding/repos/siester&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.44899738&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/servent" />
@@ -203,7 +206,12 @@
       <workItem from="1718819550303" duration="38922000" />
       <workItem from="1719005499039" duration="59280000" />
       <workItem from="1719256637801" duration="8511000" />
-      <workItem from="1719358614492" duration="133398000" />
+      <workItem from="1719358614492" duration="169477000" />
+      <workItem from="1720177989322" duration="17082000" />
+      <workItem from="1720434610279" duration="480000" />
+      <workItem from="1720435113280" duration="92676000" />
+      <workItem from="1720728386102" duration="157000" />
+      <workItem from="1720728799631" duration="6714000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -341,7 +349,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719941344791</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="json changes&#10;bug fix on message ids">
+      <option name="closed" value="true" />
+      <created>1720047242428</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1720047242430</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

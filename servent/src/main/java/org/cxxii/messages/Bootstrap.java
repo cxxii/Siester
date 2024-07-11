@@ -12,11 +12,14 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class Bootstrap {
-
     //private static final String bootstrapServerUrl = "http://127.0.0.1:4545/gnutella/get_peers";
     private static final String bootstrapServerUrl = "http://192.168.1.22:4545/bootstrap";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
+
+    private static int retries = 3;
+
+    // TODO - Allow manual entry of pongcache is bootstrap's are down
 
     public static void pingBootstrapServer() throws IOException {
         LOGGER.info("Pinging Bootstrap Server");
@@ -40,25 +43,23 @@ public class Bootstrap {
 
 //                System.out.println(inputStream.available());
 
-                // TODO - Finish this part
+                // TODO - if servent is reset with an imcomplte cache it currently will not fufill it
                 if (inputStream.available() == 0) {
                     LOGGER.warn("Bootstrap hosts empty"); //
+
+                    while (retries > 0) {
+
+                        LOGGER.warn("Repinging BOOTSTRAP"); //
+                        pingBootstrapServer();
+                        retries--;
+
+                    }
 
                 } else {
                     LOGGER.info("Received hosts from bootstrap server");
                     FileManager.writeHostsToFile(inputStream);
                 }
 
-
-
-//                Scanner scanner = new Scanner(connection.getInputStream());
-//                StringBuilder response = new StringBuilder();
-//                while (scanner.hasNextLine()) {
-//                    response.append(scanner.nextLine());
-//                }
-//
-//                System.out.println(response.toString());
-////                return response.toString();
             } else {
                 throw new IOException("Failed to ping bootstrap server. Response code: " + responseCode);
             }

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import net.bytebuddy.description.method.MethodDescription;
-import org.cxxii.messages.PingMessage;
+import org.cxxii.json.OwnHostDetailsJson;
 import org.cxxii.server.Server;
 import org.cxxii.server.SocketAddr;
 import org.slf4j.Logger;
@@ -14,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,30 +61,53 @@ public class Json {
         return objectWriter.writeValueAsString(o);
     }
 
-    public static JsonObject readJsonFromFile(String filePath) throws IOException {
-        try (FileReader reader = new FileReader(filePath)) {
-            return JsonParser.parseReader(reader).getAsJsonObject();
+
+    //  BUG BUG BUG BUG BUG BUG
+    public static JsonNode readJsonFromFile(String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(new File(filePath));
+
+            if (jsonNode.isObject() || jsonNode.isArray()) {
+                return jsonNode;
+            } else {
+                LOGGER.debug("Actual JSON content: {}", jsonNode);
+                LOGGER.error("The file does not contain a valid JSON object or array: {}", filePath);
+                throw new IllegalStateException("The file does not contain a valid JSON object or array.");
+            }
+        } catch (IOException e) {
+            LOGGER.error("Failed to parse JSON from file: {}", filePath, e);
+            throw new IOException("Failed to parse JSON from file: " + filePath, e);
         }
     }
 
+
     public static void appendToHostCacheJson(InetSocketAddress address) throws IOException {
         final String FILE_PATH = String.valueOf(FileManager.getHostCachePath());
+        Path path = Paths.get(FILE_PATH);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type listType = new TypeToken<List<SocketAddr>>() {}.getType();
+        Type listType = new TypeToken<List<SocketAddr>>() {
+        }.getType();
 
         List<SocketAddr> sockets;
-        try (FileReader reader = new FileReader(FILE_PATH)) {
-            JsonElement jsonElement = JsonParser.parseReader(reader);
-            if (jsonElement.isJsonArray()) {
-                sockets = gson.fromJson(jsonElement, listType);
-            } else {
-                sockets = new ArrayList<>();
+
+        if (Files.exists(path) && Files.size(path) > 0) {
+
+            try (FileReader reader = new FileReader(FILE_PATH)) {
+                JsonElement jsonElement = JsonParser.parseReader(reader);
+
+                if (jsonElement.isJsonArray()) {
+                    sockets = gson.fromJson(jsonElement, listType);
+                } else {
+                    sockets = new ArrayList<>();
+                }
             }
+        } else {
+            sockets = new ArrayList<>();
         }
 
-        // TODO - GET PORT FROM SETTINGS
-        SocketAddr newSocket = new SocketAddr(address.getAddress(), 6364);
+        SocketAddr newSocket = new SocketAddr(address.getAddress(), 6364);  // TODO - GET PORT FROM SETTINGS
         sockets.add(newSocket);
 
         try (FileWriter writer = new FileWriter(FILE_PATH)) {
@@ -92,14 +115,15 @@ public class Json {
         }
     }
 
+    // TODO - needs to discriminate addin to cache
     public static void writeDefaultHostDetails() throws IOException {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        HostDetailsJson hostDetailsJson = new HostDetailsJson(0, 0);
+        OwnHostDetailsJson ownHostDetailsJson = new OwnHostDetailsJson(0, 0);
 
         try (FileWriter writer = new FileWriter(FileManager.getHostDetailsPath().toFile())) {
-            gson.toJson(hostDetailsJson, writer);
+            gson.toJson(ownHostDetailsJson, writer);
             LOGGER.info("Default host details written");
         } catch (IOException e) {
             LOGGER.error("Failed to write default host details: ", e);
@@ -112,10 +136,10 @@ public class Json {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        HostDetailsJson hostDetailsJson = new HostDetailsJson(0, 0);
+        OwnHostDetailsJson ownHostDetailsJson = new OwnHostDetailsJson(0, 0);
 
         try (FileWriter writer = new FileWriter(FileManager.getHostDetailsPath().toFile())) {
-            gson.toJson(hostDetailsJson, writer);
+            gson.toJson(ownHostDetailsJson, writer);
             LOGGER.info("Set Default host details: FilesShared = 0, KbShared = 0");
         } catch (IOException e) {
             LOGGER.error("Failed to write default host details: ", e);
