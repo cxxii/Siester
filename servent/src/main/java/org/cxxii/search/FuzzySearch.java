@@ -1,40 +1,64 @@
 package org.cxxii.search;
 
-import jdk.jfr.Threshold;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FilenameUtils;
+import org.cxxii.json.FileResults;
+import org.cxxii.messages.MessageFactoryImpl;
 import org.cxxii.utils.FileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FuzzySearch {
-    private static final int THRESHOLD = 4;
 
-    public static List<Long> fuzzySearchFiles(String query) {
-        List<Long> matchedFiles = new ArrayList<>();
+    private final static Logger LOGGER = LoggerFactory.getLogger(FuzzySearch.class);
+    private static final int THRESHOLD = 8;
 
+    public static List<FileResults> fuzzySearchFiles(String query) {
+
+        List<FileResults> matchedFiles = new ArrayList<>();
 
         File directory = new File(String.valueOf(FileManager.getUploadDirPath()));
 
         if (!directory.isDirectory()) {
             System.out.println(directory + " is not a valid directory.");
-            return matchedFiles;
+           // return matchedFiles;
         }
 
         File[] files = directory.listFiles();
+
+        LOGGER.debug("FILES" + Arrays.toString(files));
+
         if (files == null) {
+
             System.out.println("Failed to list files in " + directory);
+
             return matchedFiles;
         }
 
+        int index = 1;
+
         for (File file : files) {
+
             if (isFuzzyMatch(file.getName(), query)) {
-                matchedFiles.add(file.length());
+
+               matchedFiles.add(new FileResults(index,file.getName(), (int) file.length(), FilenameUtils.getExtension(file.getName())));
+
             }
+
+            index++;
         }
+
+        LOGGER.debug("FS " + matchedFiles.size());
 
         return matchedFiles;
     }
+
 
     public static boolean isFuzzyMatch(String fileName, String query) {
 

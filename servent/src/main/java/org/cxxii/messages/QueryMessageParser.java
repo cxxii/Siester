@@ -10,13 +10,8 @@ import java.util.Arrays;
 
 public class QueryMessageParser implements MessageParser{
 
-
-    //LOGGER
     private final static Logger LOGGER = LoggerFactory.getLogger(QueryMessageParser.class);
 
-
-
-    // remove  byte arrays
     @Override
     public QueryMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
 
@@ -35,8 +30,6 @@ public class QueryMessageParser implements MessageParser{
 
         QueryMessage queryMessage = new QueryMessage(messageId, typeID, timeToLive, hops, payloadLength, minSpeed, queryBytes);
 
-
         return queryMessage.process(addr);
-
     }
 }

@@ -1,11 +1,13 @@
 package org.cxxii.server;
 
+import com.sun.net.httpserver.HttpServer;
 import org.cxxii.Scheduler;
 import org.cxxii.gui.CLI;
 import org.cxxii.messages.*;
 import org.cxxii.network.Network;
 import org.cxxii.server.config.Config;
 import org.cxxii.server.config.ConfigManager;
+import org.cxxii.share.FileServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.cxxii.utils.FileManager;
@@ -15,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import static org.cxxii.messages.PingMessage.startPings;
@@ -24,37 +28,52 @@ import static org.cxxii.messages.PingMessage.startPings;
 public class Server {
     private final static Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
 
-            // Loads config file
-            loadConfiguration(); // OK
+            Scanner scanner = new Scanner(System.in);
 
-            // Performs file checks
-            FileManager.performFileChecks(); // OK
+            LOGGER.info("Starting server setup...");
 
-            // Starts serever
-            startServer(); // OK
+            // Load configuration file
+            Server.loadConfiguration();
+            LOGGER.info("Configuration loaded successfully.");
 
-            // check host caches etc
-            checkAndPingHosts(); // OK
+            // Perform file checks
+            FileManager.performFileChecks();
+            LOGGER.info("File checks completed.");
 
-            // pings
-            //Scheduler.startPingCacheUpdates(0, 35, TimeUnit.SECONDS); // OK
+            // Start the server
+            Server.startServer();
+            LOGGER.info("Server started successfully.");
 
-            Scheduler.startPingHostCache(0, 25, TimeUnit.SECONDS); // OK
+            // Check and ping hosts
+            Server.checkAndPingHosts();
+            LOGGER.info("Host checks and pings completed.");
 
-            Scheduler.startPongCacheUpdates(0, 20, TimeUnit.SECONDS); // OK
+            // Log upload directory path for debugging
+            LOGGER.info("Upload directory: " + FileManager.getUploadDirPath());
 
+            // Start scheduled tasks
+            //Scheduler.startPingCacheUpdates(0, 35, TimeUnit.SECONDS);
+            Scheduler.startPingHostCache(0, 60, TimeUnit.SECONDS);
+            Scheduler.startPongCacheUpdates(0, 60, TimeUnit.SECONDS);
+            LOGGER.info("Scheduled tasks started.");
 
-            //            CLI.loop();
+            // Enter CLI loop
+            CLI.loop();
+            LOGGER.info("CLI loop started.");
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("IOException encountered", e);
+            throw new RuntimeException("Failed to start server due to IOException", e);
+        } catch (Exception e) {
+            LOGGER.error("Unexpected exception encountered", e);
+            throw new RuntimeException("Failed to start server due to an unexpected error", e);
         }
     }
 
-    private static void startServer() throws IOException {
+    public static void startServer() throws IOException {
         Config config = ConfigManager.getInstance().getCurrentconfig();
         MessageFactoryImpl messageFactory =  new MessageFactoryImpl();
 
@@ -65,7 +84,7 @@ public class Server {
         serverListenerThread.start();
     }
 
-    private static void loadConfiguration() {
+    public static void loadConfiguration() {
         LOGGER.info("Loading Configuration...");
 
         ConfigManager configManager = ConfigManager.getInstance();
@@ -96,7 +115,7 @@ public class Server {
         return messageFactory;
     }
 
-    private static void checkAndPingHosts() throws IOException {
+    public static void checkAndPingHosts() throws IOException {
 
         if (FileManager.checkHostCacheSize() == 0) {
 
@@ -104,7 +123,7 @@ public class Server {
 
         } else {
 
-            LOGGER.info("HostsJson found in cache");
+            LOGGER.info("Hosts found in cache");
         }
 
         PingMessage.startPings();

@@ -21,8 +21,11 @@ public class FileManager {
     private static final String DIRECTORY_NAME = "siester";
     private static final String PONG_DIRECTORY = "siester/node_pongs";
     private static final String SHARED_DIRECTORY = "siester/shared";
-    private static final String DOWNLOAD_DIRECTORY = "shared/download";
-    private static final String UPLOAD_DIRECTORY = "shared/upload";
+    private static final String DOWNLOAD_DIRECTORY = "download";
+    private static final String UPLOAD_DIRECTORY = "upload";
+
+    private static final String DDD_DIRECTORY = "shared/upload";
+    private static final String UUU_DIRECTORY = "shared/download";
     private static final String HOST_DIRECTORY = "siester/host";
     private static final String LOG_DIRECTORY = "siester/logs";
     private static final String HOST_CACHE = "host_cache.json";
@@ -37,6 +40,7 @@ public class FileManager {
 
     private static void checkAndCreateDir(File directory) {
         if (!directory.exists()) {
+
             try {
                 if (directory.mkdir()) {
                     LOGGER.info("Created dir: " + directory.getAbsolutePath());
@@ -78,10 +82,9 @@ public class FileManager {
         File hostDirectory = new File(USER_HOME, HOST_DIRECTORY);
         File logDirectory = new File(USER_HOME, LOG_DIRECTORY);
         File sharedDirectory = new File(USER_HOME, SHARED_DIRECTORY);
-        File downloadDirectory = new File(USER_HOME, DOWNLOAD_DIRECTORY);
-        File uploadDirectory = new File(USER_HOME, UPLOAD_DIRECTORY);
+        File downloadDirectory = new File(sharedDirectory, DOWNLOAD_DIRECTORY);
+        File uploadDirectory = new File(sharedDirectory, UPLOAD_DIRECTORY);
         File pongDirectory = new File(USER_HOME, PONG_DIRECTORY);
-
 
         // Checks n Creates Dir
         checkAndCreateDir(mainDirectory);
@@ -127,8 +130,16 @@ public class FileManager {
         return Paths.get(USER_HOME, PONG_DIRECTORY);
     }
 
+
+    //rename ddd
     public static Path getUploadDirPath() {
-        return getPath(DIRECTORY_NAME, UPLOAD_DIRECTORY);
+
+        return getPath(DIRECTORY_NAME, DDD_DIRECTORY);
+    }
+
+    public static Path getDownloadDirPath() {
+
+        return getPath(DIRECTORY_NAME, UUU_DIRECTORY);
     }
 
     private static Path getPath(String directory, String fileName) {
@@ -146,7 +157,6 @@ public class FileManager {
         try {
             Files.writeString(getHostCachePath(), prettyJson);
 
-
             LOGGER.info("Hosts written to host cache successfully");
         } catch (IOException e) {
             LOGGER.error("Error writing host cache file", e);
@@ -162,7 +172,7 @@ public class FileManager {
         }
     }
 
-    // BUG
+    // TODO - remove random and improve
     public synchronized static void pongCacheGenerator() {
         LOGGER.debug("Generating fresh pongcache...");
 
@@ -176,7 +186,7 @@ public class FileManager {
             int numPongFiles = nodeCache.length;
             List<NodePongJson> pongList = new ArrayList<>();
 
-            // Basic - network is small, send all pongs regardless
+            // Basic - network is small, send all hosts regardless
             if (numPongFiles < 20) {
                 for (File node : nodeCache) {
                     List<NodePongJson> nodePongs = objectMapper.readValue(node, new TypeReference<List<NodePongJson>>() {});
@@ -193,9 +203,10 @@ public class FileManager {
                 }
 
                 writePongCacheToFile(pongList, objectWriter);
+
             } else {
                 LOGGER.debug("IMPLEMENT ADVANCED PONGCACHE SYS");
-                // Implement more advanced caching if needed, for example, based on the age of pongs, etc.
+
             }
         } catch (Exception e) {
             LOGGER.error("An error occurred during PONG CACHE generation", e);

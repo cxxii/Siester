@@ -16,13 +16,14 @@ public class Scheduler {
     private static final Logger LOGGER = LoggerFactory.getLogger(Scheduler.class);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public static void startPingCacheUpdates(long initialDelay, long period, TimeUnit unit) {
-        scheduler.scheduleAtFixedRate(PingMessage::pingPongCache, initialDelay, period, unit);
-    }
-
-    public static void stopPingCacheUpdates() {
-        scheduler.shutdown();
-    }
+    // Deprecated
+//    public static void startPingCacheUpdates(long initialDelay, long period, TimeUnit unit) {
+//        scheduler.scheduleAtFixedRate(PingMessage::pingPongCache, initialDelay, period, unit);
+//    }
+//
+//    public static void stopPingCacheUpdates() {
+//        scheduler.shutdown();
+//    }
 
 
     public static void startPongCacheUpdates(long initialDelay, long period, TimeUnit unit) {

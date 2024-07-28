@@ -22,7 +22,7 @@ public class MessageFactoryImpl implements MessageFactory {
     private final Map<Byte, MessageParser> parsers = new HashMap<>();
 
     public void setParser(byte functionId, MessageParser parser) {
-        LOGGER.debug("Parser set " + functionId);
+        LOGGER.debug("Parser set {}", functionId);
         if (parser == null) throw new NullPointerException("Msg parser is null");
         parsers.put(functionId, parser);
     }

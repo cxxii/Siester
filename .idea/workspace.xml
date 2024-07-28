@@ -4,23 +4,40 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="json changes&#10;bug fix on message ids">
+    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="network integration - pong returning">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/servent/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/client/Client.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/gui/CLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/gui/CLI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/json/NodePongJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/json/NodePongJson.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Handshake.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Header.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageAbstract.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageInterface_Delete.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/OldMessageParser_Delete.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Payload.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Ping_to_delete.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Pong.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessageParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHitMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHitMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHitMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryHitMessageParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/QueryMessageParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/network/Network.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/network/Network.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/search/FuzzySearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/search/FuzzySearch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/ConnectionWorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/ConnectionWorkerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/PongCache_old.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostDetailsJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/json/OwnHostDetailsJson.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/Json.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/Json.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/NodePongJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/json/NodePongJson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostCacheReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostCacheReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostCacheWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostCacheWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/resources/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/resources/logback.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +47,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="CSS File" />
         <option value="Class" />
       </list>
     </option>
@@ -68,6 +86,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/callum/Documents/Coding/repos/siester&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -77,8 +96,13 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.44899738&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.statistic.project.settings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;yaml&quot;
+    ]
   }
 }</component>
   <component name="RecentsManager">
@@ -91,6 +115,32 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Server">
+    <configuration name="Gui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.cxxii.gui.Gui" />
+      <module name="servent" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.cxxii.gui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Network" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.cxxii.network.Network" />
+      <module name="servent" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.cxxii.network.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.cxxii.server.Server" />
       <module name="servent" />
@@ -104,38 +154,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FileManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UploadManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.cxxii.utils.UploadManager" />
       <module name="servent" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="filemanager.*" />
+          <option name="PATTERN" value="org.cxxii.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="filemanager" />
-      <option name="MAIN_CLASS_NAME" value="filemanager.FileManagerTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FileManagerTest.testCheckHostCacheSize" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="servent" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="filemanager.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="filemanager" />
-      <option name="MAIN_CLASS_NAME" value="filemanager.FileManagerTest" />
-      <option name="METHOD_NAME" value="testCheckHostCacheSize" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PingMessageParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="QueryHitMessageParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="servent" />
       <extension name="coverage">
         <pattern>
@@ -144,7 +176,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="messages.parse" />
-      <option name="MAIN_CLASS_NAME" value="messages.parse.PingMessageParserTest" />
+      <option name="MAIN_CLASS_NAME" value="messages.parse.QueryHitMessageParserTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -156,30 +188,20 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="servent" type="docker-deploy" factoryName="dockerfile" singleton="false" temporary="true" server-name="Docker">
-      <deployment type="dockerfile">
-        <settings>
-          <option name="buildOnly" value="true" />
-          <option name="containerName" value="" />
-          <option name="sourceFilePath" value="servent/Dockerfile" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
     <list>
+      <item itemvalue="Application.Network" />
+      <item itemvalue="Application.UploadManager" />
+      <item itemvalue="Application.Gui" />
       <item itemvalue="Application.Server" />
-      <item itemvalue="Docker.servent" />
-      <item itemvalue="JUnit.FileManagerTest" />
-      <item itemvalue="JUnit.FileManagerTest.testCheckHostCacheSize" />
-      <item itemvalue="JUnit.PingMessageParserTest" />
+      <item itemvalue="JUnit.QueryHitMessageParserTest" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Server" />
-        <item itemvalue="Docker.servent" />
-        <item itemvalue="JUnit.PingMessageParserTest" />
-        <item itemvalue="JUnit.FileManagerTest" />
-        <item itemvalue="JUnit.FileManagerTest.testCheckHostCacheSize" />
+        <item itemvalue="Application.Network" />
+        <item itemvalue="JUnit.QueryHitMessageParserTest" />
+        <item itemvalue="Application.UploadManager" />
+        <item itemvalue="Application.Gui" />
       </list>
     </recent_temporary>
   </component>
@@ -211,7 +233,11 @@
       <workItem from="1720434610279" duration="480000" />
       <workItem from="1720435113280" duration="92676000" />
       <workItem from="1720728386102" duration="157000" />
-      <workItem from="1720728799631" duration="6714000" />
+      <workItem from="1720728799631" duration="7921000" />
+      <workItem from="1720738607432" duration="13325000" />
+      <workItem from="1720819474428" duration="32649000" />
+      <workItem from="1721135622077" duration="152760000" />
+      <workItem from="1722171650301" duration="15204000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -357,7 +383,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720047242430</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="network integration - pong returning">
+      <option name="closed" value="true" />
+      <created>1720738104894</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1720738104895</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -378,7 +412,8 @@
     <MESSAGE value="Docker somehow now is working" />
     <MESSAGE value="bug hunting" />
     <MESSAGE value="json changes&#10;bug fix on message ids" />
-    <option name="LAST_COMMIT_MESSAGE" value="json changes&#10;bug fix on message ids" />
+    <MESSAGE value="network integration - pong returning" />
+    <option name="LAST_COMMIT_MESSAGE" value="network integration - pong returning" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

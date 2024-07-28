@@ -116,11 +116,13 @@ public class PongMessage extends MessageAbstract {
     }
 
     public static void sendPongCache(InetSocketAddress addr, PingMessage ping) throws UnknownHostException {
+        LOGGER.info("Sending Pongs from Cache to " + addr.getHostString());
+
+
         List<NodePongJson> listOfPongs = PongCacheReader.readPongCache();
 
-        for (NodePongJson node : listOfPongs) {
 
-            LOGGER.debug("PONG CACHE LIST >>> " + listOfPongs);
+        for (NodePongJson node : listOfPongs) {
 
             PongMessage pong = new PongMessage(
                     ping.getBytesMessageID(),
@@ -131,9 +133,7 @@ public class PongMessage extends MessageAbstract {
                     node.getSharedFiles(),
                     node.getKilobytesShared());
 
-            LOGGER.info("%%%%%%% ID " + Arrays.toString(ping.getBytesMessageID()));
-            LOGGER.info("@@@@@@ SENDING THE 10X PONGS @@@@@@@@");
-            LOGGER.debug("PONG SENDING " + Arrays.toString(pong.getBytesMessageID()));
+
             pong.sendPongMessage(addr);
         }
     }
@@ -147,106 +147,89 @@ public class PongMessage extends MessageAbstract {
         ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + PAYLOAD_LENGTH);
         buffer.order(ByteOrder.BIG_ENDIAN);
 
-
-        if (this.getPingID() == null) {
-            buffer.put(this.getBytesMessageID());
-        } else {
-            buffer.put(this.getPingID());
-        }
-
-
+        buffer.put(pingID != null ? pingID : bytesMessageID);
         buffer.put(TYPE_ID);
-        buffer.put(this.getTimeToLive());
-        buffer.put(this.getHops());
+        buffer.put(getTimeToLive());
+        buffer.put(getHops());
         buffer.putInt(PAYLOAD_LENGTH);
-        buffer.putShort((short) this.getPortNum());
-
-        if (this.getIpAddress() == null) {
-
-            InetAddress FX = InetAddress.getByName(this.getIpAddressString());
-            buffer.put(FX.getAddress());
-
-        } else {
-            buffer.put(this.getIpAddress());
-        }
-
-
-        buffer.putInt(this.getSharedFiles());
-        buffer.putInt(this.getKilobytesShared());
+        buffer.putShort((short) portNum);
+        buffer.put(ipAddress != null ? ipAddress : InetAddress.getByName(ipAddressString).getAddress());
+        buffer.putInt(sharedFiles);
+        buffer.putInt(kilobytesShared);
 
         return buffer.array();
     }
 
     public void sendPongMessage(InetSocketAddress addr) {
+
         String ip = addr.getAddress().getHostAddress();
         int port = Network.getActivePort(); // TODO unfudge this
-
-        LOGGER.debug("Attempting to PONG " + ip + ":" + port);
-        LOGGER.debug("Pong message ID: " + Arrays.toString(this.getPingID()));
-        LOGGER.debug("PONGPONGPONG " + Arrays.toString(this.getBytesMessageID()));
-        LOGGER.debug("10X PING TO STR" + this.toString());
 
         try (Socket socket = new Socket(ip, port);
              OutputStream outputStream = socket.getOutputStream()) {
 
             outputStream.write(this.serializeMessage());
-            LOGGER.info("Successfully sent Pong message to " + ip + ":" + port);
+            LOGGER.info("Successfully sent Pong message to  {}:{}", ip, port);
 
         } catch (IOException e) {
-            LOGGER.error("Failed to send Pong message to " + ip + ":" + port, e);
+            LOGGER.error("Failed to send Pong message to  {}:{}", ip, port, e);
         }
     }
 
-    public PongMessage process(InetSocketAddress addr) throws IOException {
+    public PongMessage process(InetSocketAddress addr) {
         LOGGER.info("Processing PONG...");
 
-        HostsJson hostsJson = new HostsJson(this.getIpAddressString(), getPortNum());
-        HostCacheWriter.appendToHostJson(hostsJson);
+        try {
+            HostsJson hostsJson = new HostsJson(ipAddressString, portNum);
+            HostCacheWriter.appendPongToHostCache(hostsJson);
 
-        String filename = addr.getHostString().replace('.', '_') + ".json";
-        File path = new File(String.valueOf(FileManager.getNodePongDirPath()));
-        File file = new File(path, filename);
+            File file = getPongCacheFile(addr);
+            NodePongJson nodePongJson = new NodePongJson(portNum, ipAddressString, sharedFiles, kilobytesShared, hops);
 
-        NodePongJson nodePongJson = new NodePongJson(this.portNum, this.ipAddressString, this.sharedFiles, this.kilobytesShared, this.hops);
+            List<NodePongJson> pongList = readExistingPongs(file);
+            pongList.add(nodePongJson);
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJson = gson.toJson(nodePongJson);
+            writePongsToFile(file, pongList);
 
-        List<NodePongJson> pong_list = new ArrayList<>();
-
-        if (!file.exists()) {
-            LOGGER.info("FILE DOES NOT EXIST" + filename);
-            try {
-                if (file.createNewFile()) {
-                    pong_list.add(nodePongJson);
-                    try (FileWriter writer = new FileWriter(file)) {
-                        gson.toJson(pong_list, writer);
-                    }
-                    LOGGER.info("PONG Json created: " + filename);
-                }
-            } catch (IOException e) {
-                LOGGER.error("Error creating NodePong Json for - " + filename);
-            }
-        } else {
-            ObjectMapper mapper = new ObjectMapper();
-            if (Files.size(file.toPath()) > 0) {
-                try {
-                    JsonNode jsonNode = mapper.readTree(Files.newBufferedReader(file.toPath()));
-                    pong_list = mapper.convertValue(jsonNode, new TypeReference<List<NodePongJson>>() {});
-                } catch (IOException e) {
-                    LOGGER.debug("ERROR READING EXISTING PONGS", e);
-                }
-            }
-            pong_list.add(nodePongJson);
+            LOGGER.info("Pong JSON appended to existing file.");
+        } catch (IOException e) {
+            LOGGER.error("Error processing pong", e);
         }
 
-        try (FileWriter writer = new FileWriter(file)) {
-            LOGGER.info("!!!! WRITING PONGS TO FILE !!!!");
-            gson.toJson(pong_list, writer);
-        }
-
-        LOGGER.info("Pong JSON appended to existing file.");
         return this;
+    }
+
+    // move?
+    private File getPongCacheFile(InetSocketAddress addr) {
+        String filename = addr.getHostString().replace('.', '_') + ".json";
+        File path = new File(FileManager.getNodePongDirPath().toString());
+        return new File(path, filename);
+    }
+
+    // move??
+    private List<NodePongJson> readExistingPongs(File file) throws IOException {
+        if (!file.exists()) {
+            file.createNewFile();
+            return new ArrayList<>();
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        if (Files.size(file.toPath()) > 0) {
+            JsonNode jsonNode = mapper.readTree(Files.newBufferedReader(file.toPath()));
+            return mapper.convertValue(jsonNode, new TypeReference<List<NodePongJson>>() {});
+        }
+
+        return new ArrayList<>();
+    }
+
+    // move??
+    private void writePongsToFile(File file, List<NodePongJson> pongList) throws IOException {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(pongList, writer);
+
+            LOGGER.info("Writing PONG to file");
+        }
     }
 
     @Override

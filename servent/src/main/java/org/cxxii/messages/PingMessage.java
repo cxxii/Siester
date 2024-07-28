@@ -11,10 +11,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.cxxii.messages.MessageAbstract;
-import org.cxxii.messages.PongMessage;
 import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
@@ -39,13 +35,17 @@ public class PingMessage extends MessageAbstract {
         super(bytesMessageID, typeId, timeToLive, hops, payloadLength);
     }
 
+    private int getPayloadLength() {
+        return PAYLOAD_LENGTH;
+    }
+
     public static void startPings() throws SocketException, UnknownHostException {
         LOGGER.info("Pinging all known hosts...");
 
         String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
         List<SocketAddr> hosts = HostCacheReader.readHostCache();
 
-        LOGGER.info("Known network size: " + hosts.size());
+        LOGGER.info("Known network size: " + HostCacheReader.getNetworkSize());
 
         if (hosts != null) {
             for (SocketAddr host : hosts) {
@@ -65,61 +65,56 @@ public class PingMessage extends MessageAbstract {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-
-        outputStream.write(message.UUIDtoByteArray(message.getMessageID()));
-
+        outputStream.write(UUIDtoByteArray(message.getMessageID()));
         outputStream.write(Byte.toUnsignedInt(message.getTypeId()));
-
         outputStream.write(Byte.toUnsignedInt(message.getTimeToLive()));
-
         outputStream.write(Byte.toUnsignedInt(message.getHops()));
 
+
         ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
+
         lengthBuffer.putInt(message.getPayloadLength());
         outputStream.write(lengthBuffer.array());
-
-        //outputStream.write(message.getPayload());
-
 
         return outputStream.toByteArray();
     }
 
-    public static void pingPongCache() {
-        LOGGER.info("****** RUNNING PING PONG CACHE ******");
 
-        ObjectMapper objectMapper = new ObjectMapper();
+    // DEPRECATED - CONFIRM AND DELETE
+//    public static void pingPongCache() {
+//        LOGGER.info("****** RUNNING PING PONG CACHE ******");
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//
+//        try {
+//            JsonNode rootNode = objectMapper.readTree(FileManager.getPongCachePath().toFile());
+//
+//            for (JsonNode node : rootNode) {
+//
+//                String ipAddress = node.get("ipAddress").asText();
+//
+//                SocketAddr addr = new SocketAddr(InetAddress.getByName(ipAddress), node.get("portNum").asInt());
+//
+//                PingMessage ping = new PingMessage();
+//
+//                LOGGER.debug(addr.toString());
+//
+//                ping.sendPing(addr);
+//            }
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-        try {
-            JsonNode rootNode = objectMapper.readTree(FileManager.getPongCachePath().toFile());
-
-            for (JsonNode node : rootNode) {
-
-                String ipAddress = node.get("ipAddress").asText();
-
-                SocketAddr addr = new SocketAddr(InetAddress.getByName(ipAddress), node.get("portNum").asInt());
-
-                PingMessage ping = new PingMessage();
-
-                LOGGER.debug(addr.toString());
-
-                ping.sendPing(addr);
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private byte[] UUIDtoByteArray(UUID uuid) {
+    private static byte[] UUIDtoByteArray(UUID uuid) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(16);
         byteBuffer.putLong(uuid.getMostSignificantBits());
         byteBuffer.putLong(uuid.getLeastSignificantBits());
         return byteBuffer.array();
     }
 
-    private int getPayloadLength() {
-        return PAYLOAD_LENGTH;
-    }
+
 
     private void sendPing(SocketAddr host) {
         executorService.submit(() -> {
@@ -148,6 +143,7 @@ public class PingMessage extends MessageAbstract {
         });
     }
 
+
     private static boolean checkHostInCache(InetAddress addr) {
         List<SocketAddr> sockets = HostCacheReader.readHostCache();
 
@@ -158,12 +154,6 @@ public class PingMessage extends MessageAbstract {
         }
 
         return false;
-    }
-
-    private static void ttlAndHopsIncrementor(MessageAbstract messageAbstract) {
-
-        messageAbstract.setTimeToLive((byte) (messageAbstract.getTimeToLive() - 1));
-        messageAbstract.setHops((byte) (messageAbstract.getHops() + 1));
     }
 
     protected PingMessage process(InetSocketAddress addr) throws IOException {
@@ -178,10 +168,7 @@ public class PingMessage extends MessageAbstract {
         }
 
         PongMessage.respond(this.getBytesMessageID(), this.getTimeToLive(), this.getHops(), addr);
-
-        LOGGER.debug("SEND PONG CACHE START!!");
         PongMessage.sendPongCache(addr, this);
-        LOGGER.debug("SEND PONG CACHE END!!");
 
         return this;
     }

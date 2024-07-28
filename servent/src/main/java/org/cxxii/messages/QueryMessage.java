@@ -1,5 +1,6 @@
 package org.cxxii.messages;
 
+import org.cxxii.json.FileResults;
 import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -21,24 +23,16 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static org.cxxii.network.Network.getLocalIpAddress;
 import static org.cxxii.search.FuzzySearch.fuzzySearchFiles;
 
 public class QueryMessage extends MessageAbstract {
 
-    // LOGGER
     private final static Logger LOGGER = LoggerFactory.getLogger(QueryMessage.class);
 
-    // CONSTANTS
-
-    // private final UUID MESSAGE_ID = UUID.randomUUID(); // this is in the constructor - delete?
     private static final byte TYPE_ID = (byte) 0x80;
-
     public static final int HEADER_LENGTH = 23;
 
-    //private static final byte[] PAYLOAD = null;
-
-
-    // INSTANCE
     //private byte PAYLOAD_LENGTH = 0x00000000;
     private int payloadLength;
     private byte timeToLive = (byte) 0x07;
@@ -115,7 +109,7 @@ public class QueryMessage extends MessageAbstract {
     public QueryMessage(byte payloadLength, String query) {
         super(TYPE_ID, (byte) 0x07, (byte) 0x00, payloadLength);
         this.payloadLength = payloadLength;
-        this.minSpeed = 0;
+        this.minSpeed = 0; // fix
         this.query = query;
     }
 
@@ -168,6 +162,8 @@ public class QueryMessage extends MessageAbstract {
             outputStream.write(serializedQuery);
             outputStream.flush();
 
+            System.out.println("QUERY: " + queryMessage + " sent to: " + host.getIp() + ":" + host.getPort());
+
             LOGGER.info("QUERY: " + queryMessage + " sent to: " + host.getIp() + ":" + host.getPort());
 
         } catch (IOException e) {
@@ -176,17 +172,18 @@ public class QueryMessage extends MessageAbstract {
     }
 
 
-    private static String getUsersQuery() {
-        Scanner scanner = new Scanner(System.in);
+    private static String getUsersQuery(Scanner scanner) {
+
+        System.out.println("Enter your search query");
 
         return scanner.nextLine();
     }
 
-    public static void makeQuery() {
+    public static void makeQuery(Scanner scanner) {
 
         List<SocketAddr> hosts = HostCacheReader.readHostCache();
 
-        String usersQuery = getUsersQuery();
+        String usersQuery = getUsersQuery(scanner);
 
         byte queryLength = (byte) getPayloadLength(usersQuery);
 
@@ -194,97 +191,61 @@ public class QueryMessage extends MessageAbstract {
 
         for (SocketAddr host : hosts) {
             sendQuery(host, queryMessage);
-        }
+}
     }
 
-
-    // copied from ping need to change
-//    private void queryOnwards(PingMessage ping, InetSocketAddress addr) {
-//
-//        List<SocketAddr> hosts = readHostCache();
-//
-//        if (ping.getTimeToLive() < 0)
-//
-//            for (SocketAddr host : hosts) {
-//                sendPing(host, ping);
-//            }
-//    }
-
-
-//    public QueryMessage process(InetSocketAddress addr) throws UnsupportedEncodingException {
-//        LOGGER.info("Processing QUERY");
-//
-//
-//        // change ttl and hops
-//        if (this.getTimeToLive() != 0) {
-//
-//            this.setHops((byte) (this.getTimeToLive() - 1));
-//            this.setHops((byte) (this.getHops() + 1));
-//
-//            // query onward
-//
-//
-//        }
-//
-//        LOGGER.info("MESAGE DIED WITH YOU'");
-//
-//        byte[] queryByes = this.queryBytes;
-//
-//        String queryString = new String(queryByes, "UTF-8");
-//
-//        File reqfile = new File(String.valueOf(FileManager.getUploadDirPath()) + "/" + queryString);
-//
-//        System.out.println(reqfile);
-//
-//        System.out.println(queryString);
-//
-//        if (reqfile.isFile()) {
-//            System.out.println("FILE FOUND" + reqfile.getName());
-//        } else {
-//            System.out.println("NO FILE");
-//        }
-//
-//
-//
-//        System.out.println(Arrays.toString(queryByes));
-//
-//
-//        return this;
-//    }
 
     public QueryMessage process(InetSocketAddress addr) throws IOException {
         LOGGER.info("Processing QUERY");
 
         // Update ttl and hops
-        if (this.getTimeToLive() > 0) {
-            this.setTimeToLive((byte) (this.getTimeToLive() - 1));
-            this.setHops((byte) (this.getHops() + 1));
-
+        if (this.getTimeToLive() != 0) {
+            ttlAndHopsIncrementor(this);
             // query on
             // query onward logic if any
         }
 
-        String queryString = new String(this.queryBytes, StandardCharsets.UTF_8);
+        //SEARCH
+        List<FileResults> matchedFiles = fuzzySearchFiles(new String(this.queryBytes, StandardCharsets.UTF_8));
 
-        // Construct the file path
-        //String uploadDirPath = String.valueOf(FileManager.getUploadDirPath());
-        //String filePath = uploadDirPath + "/" + queryString;
+        LOGGER.info("QUERY PROCESS");
 
+        LOGGER.debug("IPIPIPIPIP");
+        byte[] localIpAddressBytes = Network.getLocalIpAddress();
+        InetAddress ipip = InetAddress.getByAddress(localIpAddressBytes);
 
-        // SEARCH
-        List<Long> matchedFiles = fuzzySearchFiles(queryString);
+        if (!matchedFiles.isEmpty()) {
+            LOGGER.debug("file found");
 
-        if (matchedFiles.isEmpty()) {
-            System.out.println("No files found matching the fuzzy query.");
-        } else {
-            System.out.println("Files found matching the fuzzy query:");
-            for (Long file : matchedFiles) {
-                System.out.println(file);
+            QueryHitMessage.Builder builder = new QueryHitMessage.Builder()
+                    .withMessageId(this.bytesMessageID)
+                    .withTimeToLive(this.getTimeToLive())
+                    .withHops(this.getHops())
+                    .withNumberOfHits(matchedFiles.size())
+                    .withPort(6364)
+                    .withIpAddress(ipip.getHostAddress())// ???
+                    .withSpeed(22222); // hook up later
+
+            LOGGER.debug("QM matchesfiles " + matchedFiles.size());
+
+            int index = 1;
+            for (FileResults result: matchedFiles) {
+                LOGGER.debug("num matches" + String.valueOf(matchedFiles.size()));
+                LOGGER.debug("RESULT" + String.valueOf(index));
+                QueryHitMessage.Result result1 = new QueryHitMessage.Result(index, result.getFilename(), result.getFilesize(), result.getFileType());
+                builder.addResult(result1);
+                index++;
             }
+
+            QueryHitMessage message = builder.build();
+
+            QueryHitMessage.sendQueryHit(addr, message);
+
+
+        } else {
+
+            System.out.println("No files found.");
         }
-
-
-        // gen query hit
 
         return this;
     }

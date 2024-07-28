@@ -43,6 +43,7 @@ public class ConnectionWorkerThread extends Thread {
             if (socket != null) {
                 try {
                     socket.close();
+
                     LOGGER.info("Socket closed for " + socket.getInetAddress());
                 } catch (IOException e) {
                     LOGGER.error("Error closing socket", e);

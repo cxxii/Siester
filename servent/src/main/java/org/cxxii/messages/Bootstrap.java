@@ -14,6 +14,7 @@ import java.util.Scanner;
 public class Bootstrap {
     //private static final String bootstrapServerUrl = "http://127.0.0.1:4545/gnutella/get_peers";
     private static final String bootstrapServerUrl = "http://192.168.1.22:4545/bootstrap";
+    //private static final String bootstrapServerUrl = "http://localhost:4545/bootstrap";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
 
@@ -43,7 +44,7 @@ public class Bootstrap {
 
 //                System.out.println(inputStream.available());
 
-                // TODO - if servent is reset with an imcomplte cache it currently will not fufill it
+                // TODO - if servent is reset with an complete cache it currently will not fulfill it
                 if (inputStream.available() == 0) {
                     LOGGER.warn("Bootstrap hosts empty"); //
 

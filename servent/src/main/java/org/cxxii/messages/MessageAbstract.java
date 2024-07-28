@@ -51,18 +51,8 @@ public abstract class MessageAbstract {
         //this.payload = payload;
     }
 
-//    public MessageAbstract(byte typeId, byte timeToLive, byte hops, byte payloadLength) {
-//        this.typeId = typeId;
-//        this.timeToLive = timeToLive;
-//        this.hops = hops;
-//        this.payloadLength = payloadLength;
-//        //this.payload = payload;
-//    }
 
-
-    //remove
     public MessageAbstract() {
-
     }
 
 
@@ -77,15 +67,6 @@ public abstract class MessageAbstract {
     public byte getTypeId() {
         return typeId;
     }
-
-
-
-
-    /**
-     *     public byte[] getPayload() {
-     *         return payload;
-     *     }
-     */
 
     public byte getTimeToLive() {
         return timeToLive;
@@ -102,4 +83,11 @@ public abstract class MessageAbstract {
     public void setHops(byte hops) {
         this.hops = hops;
     }
+
+    public static void ttlAndHopsIncrementor(MessageAbstract messageAbstract) {
+
+        messageAbstract.setTimeToLive((byte) (messageAbstract.getTimeToLive() - 1));
+        messageAbstract.setHops((byte) (messageAbstract.getHops() + 1));
+    }
 }
+

@@ -38,4 +38,12 @@ public class HostCacheReader {
 
         return addresses;
     }
+
+
+    public static int getNetworkSize() {
+
+        List<SocketAddr> hosts = readHostCache();
+
+        return hosts.size();
+    }
 }

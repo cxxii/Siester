@@ -43,12 +43,6 @@ public class NodePongJson {
         this.portNum = portNum;
     }
 
-//    public byte[] getIpAddressByte() throws UnknownHostException {
-//        InetAddress inetAddress = InetAddress.getByName(ipAddress);
-//
-//        return inetAddress.getAddress();
-//    }
-
     public String getIpAddress() {
 
         return ipAddress;
