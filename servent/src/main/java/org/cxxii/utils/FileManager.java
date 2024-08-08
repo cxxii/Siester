@@ -23,13 +23,13 @@ public class FileManager {
     private static final String SHARED_DIRECTORY = "siester/shared";
     private static final String DOWNLOAD_DIRECTORY = "download";
     private static final String UPLOAD_DIRECTORY = "upload";
-
     private static final String DDD_DIRECTORY = "shared/upload";
     private static final String UUU_DIRECTORY = "shared/download";
     private static final String HOST_DIRECTORY = "siester/host";
     private static final String LOG_DIRECTORY = "siester/logs";
     private static final String HOST_CACHE = "host_cache.json";
     private static final String PONG_CACHE = "pong_cache.json";
+    private static final String PONG_HIT = "pong_rank.json";
     private static final String HOST_DETAILS = "host_details.json";
     private static final String LOG_DETAILS = "logs.txt";
     private static final String USER_HOME = System.getProperty("user.home");
@@ -100,6 +100,7 @@ public class FileManager {
         checkAndCreateFile(new File(mainDirectory, PONG_CACHE));
         checkAndCreateFile(new File(mainDirectory, HOST_DETAILS));
         checkAndCreateFile(new File(logDirectory, LOG_DETAILS));
+        checkAndCreateFile(new File(mainDirectory, PONG_HIT));
 
         if (checkHostDetailsSize() == 0) {
             Json.writeDefaultHostDetails();
@@ -116,6 +117,10 @@ public class FileManager {
 
     public static Path getHostCachePath() {
         return getPath(HOST_DIRECTORY, HOST_CACHE);
+    }
+
+    public static Path getPongHitPath() {
+        return getPath(DIRECTORY_NAME, PONG_HIT);
     }
 
     public static Path getHostDetailsPath() {

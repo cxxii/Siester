@@ -25,6 +25,8 @@ public class HostCacheWriter {
         if (Files.exists(getHostCachePath()) && Files.isReadable(getHostCachePath())) {
             try {
                 hostList = objectMapper.readValue(getHostCachePath().toFile(), new TypeReference<Set<HostsJson>>() {});
+                LOGGER.debug("READING HOSTCACHE 22222");
+                LOGGER.debug(hostList.toString());
             } catch (IOException e) {
                 LOGGER.error("Could not read JSON file", e);
             }
@@ -36,8 +38,11 @@ public class HostCacheWriter {
         if (hostList.add(host)) {
             LOGGER.info("Added new node to the set: {}", host);
         } else {
+            System.out.println("Node already exists in the set: {}" + host);
             LOGGER.info("Node already exists in the set: {}", host);
         }
+
+        System.out.println("APPEND TO HOST CACHE" + hostList);
 
         // Write the updated list back to the file
         try {

@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
@@ -41,6 +43,9 @@ public class PingMessage extends MessageAbstract {
 
     public static void startPings() throws SocketException, UnknownHostException {
         LOGGER.info("Pinging all known hosts...");
+
+        PongMessage.clearHostList(); // OK
+
 
         String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
         List<SocketAddr> hosts = HostCacheReader.readHostCache();
@@ -80,32 +85,32 @@ public class PingMessage extends MessageAbstract {
     }
 
 
-    // DEPRECATED - CONFIRM AND DELETE
-//    public static void pingPongCache() {
-//        LOGGER.info("****** RUNNING PING PONG CACHE ******");
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//
-//        try {
-//            JsonNode rootNode = objectMapper.readTree(FileManager.getPongCachePath().toFile());
-//
-//            for (JsonNode node : rootNode) {
-//
-//                String ipAddress = node.get("ipAddress").asText();
-//
-//                SocketAddr addr = new SocketAddr(InetAddress.getByName(ipAddress), node.get("portNum").asInt());
-//
-//                PingMessage ping = new PingMessage();
-//
-//                LOGGER.debug(addr.toString());
-//
-//                ping.sendPing(addr);
-//            }
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    // DEPRECATED??????
+    public static void pingPongCache() {
+        LOGGER.info("****** RUNNING PING PONG CACHE ******");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(FileManager.getPongCachePath().toFile());
+
+            for (JsonNode node : rootNode) {
+
+                String ipAddress = node.get("ipAddress").asText();
+
+                SocketAddr addr = new SocketAddr(InetAddress.getByName(ipAddress), node.get("portNum").asInt());
+
+                PingMessage ping = new PingMessage();
+
+                LOGGER.debug(addr.toString());
+
+                ping.sendPing(addr);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static byte[] UUIDtoByteArray(UUID uuid) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(16);
@@ -113,6 +118,7 @@ public class PingMessage extends MessageAbstract {
         byteBuffer.putLong(uuid.getLeastSignificantBits());
         return byteBuffer.array();
     }
+
 
 
 

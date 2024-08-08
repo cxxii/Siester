@@ -18,7 +18,7 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static org.cxxii.gui.CLI.userInput;
+
 
 public class QueryHitMessage extends MessageAbstract {
 
@@ -137,6 +137,7 @@ public class QueryHitMessage extends MessageAbstract {
 
 
     }
+
 
     public static class Result {
         private int fileIndex;
@@ -259,15 +260,30 @@ public class QueryHitMessage extends MessageAbstract {
         return buffer.array();
     }
 
-    public QueryHitMessage process() throws IOException {
-
-        Scanner scanner = new Scanner(System.in);
+    public List<String> fileName() throws UnknownHostException {
 
         List<String> listRez = new ArrayList<>();
 
+        for (Result result : this.resultList) {
+            System.out.println("filename = " + result.fileName);
+            System.out.println("filesize = " + result.fileSize);
+            System.out.println("from = " + InetAddress.getByAddress(this.ipAddress).getHostAddress() + ":" + this.portNum);
+            System.out.println("\n");
+
+
+            String url = "http://" + InetAddress.getByAddress(this.ipAddress).getHostAddress() + ":" + 6699 + "/" + result.fileName;
+
+            listRez.add(url);
+        }
+
+        return listRez;
+    }
+
+    public QueryHitMessage process() throws IOException {
+        List<String> listRez = new ArrayList<>();
         int index = 0;
 
-        for (Result result: this.resultList) {
+        for (Result result : this.resultList) {
             System.out.println("index = " + index);
             System.out.println("filename = " + result.fileName);
             System.out.println("filesize = " + result.fileSize);
@@ -281,23 +297,48 @@ public class QueryHitMessage extends MessageAbstract {
             listRez.add(url);
         }
 
-        System.out.println("Index of file you wish to download... ");
-        int fileIndex = scanner.nextInt();  // Assuming userInput() is replaced with scanner for reading input
-        if (fileIndex >= 0 && fileIndex < listRez.size()) {
-            String downloadUrl = listRez.get(fileIndex);
-            String outputFilePath = FileManager.getDownloadDirPath().toString() + "/" + resultList.get(fileIndex).fileName;
+//        Scanner scanner = ScannerSingleton.getInstance();
+//        int fileIndex = -1;
+//
+////        while (true) {
+//            System.out.println("Index of file you wish to download... ");
+//            try {
+//                System.out.println("1111");
+//                System.out.println(Thread.currentThread());
+//                if (scanner.hasNext()) {
+//                    System.out.println(Thread.currentThread());
+//                    System.out.println("22222");
+//                    if (scanner.hasNextInt()) {
+//                        fileIndex = scanner.nextInt();
+//                        scanner.nextLine(); // consume newline character
+//                        if (fileIndex >= 0 && fileIndex < listRez.size()) {
+//                            System.out.println("GOOD");
+//
+//                        } else {
+//                            System.out.println("Invalid index. Please enter a number between 0 and " + (listRez.size() - 1) + ".");
+//                        }
+//
+//                    } else {
+//                        System.out.println("Invalid input. Please enter a valid integer.");
+//                        scanner.next(); // clear the invalid input
+//                    }
+//
+//                } else {
+//                    System.out.println("3333331");
+//                }
+//            } catch (Exception e) {
+//                System.out.println("An error occurred while reading input. Please try again.");
+//                scanner.next(); // clear the invalid input
+//            }
+//        }
 
-
-            FileDownloader.downloadFile(downloadUrl, outputFilePath);
-
-        } else {
-            System.out.println("Invalid index.");
-        }
+//        String downloadUrl = listRez.get(fileIndex);
+//        String outputFilePath = FileManager.getDownloadDirPath().toString() + "/" + resultList.get(fileIndex).fileName;
+//        System.out.println("DOWNLOADING FILE\n" + downloadUrl);
+        //FileDownloader.downloadFile(downloadUrl, outputFilePath);
 
         return this;
     }
-
-
     // cd ~/siester/shared/upload/ && echo "fuxksdhd" > nelly.txt && cd ~/siester/logs && > application.log
 }
 

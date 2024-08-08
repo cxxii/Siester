@@ -1,6 +1,7 @@
 package org.cxxii.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -82,26 +83,23 @@ public class Json {
     }
 
 
-    public static void appendToHostCacheJson(InetSocketAddress address) throws IOException {
+    // Now uses Jackson not Gson
+    // may not need to be sync
+    public synchronized static void appendToHostCacheJson(InetSocketAddress address) throws IOException {
         final String FILE_PATH = String.valueOf(FileManager.getHostCachePath());
         Path path = Paths.get(FILE_PATH);
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type listType = new TypeToken<List<SocketAddr>>() {
-        }.getType();
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
         List<SocketAddr> sockets;
 
         if (Files.exists(path) && Files.size(path) > 0) {
+            JsonNode jsonNode = objectMapper.readTree(new File(FILE_PATH));
 
-            try (FileReader reader = new FileReader(FILE_PATH)) {
-                JsonElement jsonElement = JsonParser.parseReader(reader);
-
-                if (jsonElement.isJsonArray()) {
-                    sockets = gson.fromJson(jsonElement, listType);
-                } else {
-                    sockets = new ArrayList<>();
-                }
+            if (jsonNode.isArray()) {
+                sockets = objectMapper.convertValue(jsonNode, new TypeReference<List<SocketAddr>>() {});
+            } else {
+                sockets = new ArrayList<>();
             }
         } else {
             sockets = new ArrayList<>();
@@ -110,10 +108,43 @@ public class Json {
         SocketAddr newSocket = new SocketAddr(address.getAddress(), 6364);  // TODO - GET PORT FROM SETTINGS
         sockets.add(newSocket);
 
-        try (FileWriter writer = new FileWriter(FILE_PATH)) {
-            gson.toJson(sockets, writer);
-        }
+        writer.writeValue(new File(FILE_PATH), sockets);
     }
+
+
+    // DEPRECATED
+//    public static void appendToHostCacheJson(InetSocketAddress address) throws IOException {
+//        final String FILE_PATH = String.valueOf(FileManager.getHostCachePath());
+//        Path path = Paths.get(FILE_PATH);
+//
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        Type listType = new TypeToken<List<SocketAddr>>() {
+//        }.getType();
+//
+//        List<SocketAddr> sockets;
+//
+//        if (Files.exists(path) && Files.size(path) > 0) {
+//
+//            try (FileReader reader = new FileReader(FILE_PATH)) {
+//                JsonElement jsonElement = JsonParser.parseReader(reader);
+//
+//                if (jsonElement.isJsonArray()) {
+//                    sockets = gson.fromJson(jsonElement, listType);
+//                } else {
+//                    sockets = new ArrayList<>();
+//                }
+//            }
+//        } else {
+//            sockets = new ArrayList<>();
+//        }
+//
+//        SocketAddr newSocket = new SocketAddr(address.getAddress(), 6364);  // TODO - GET PORT FROM SETTINGS
+//        sockets.add(newSocket);
+//
+//        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+//            gson.toJson(sockets, writer);
+//        }
+//    }
 
     // TODO - needs to discriminate addin to cache
     public static void writeDefaultHostDetails() throws IOException {

@@ -5,6 +5,7 @@ import org.cxxii.network.Network;
 import org.cxxii.server.SocketAddr;
 import org.cxxii.utils.FileManager;
 import org.cxxii.utils.HostCacheReader;
+import org.cxxii.utils.ScannerSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,26 +173,42 @@ public class QueryMessage extends MessageAbstract {
     }
 
 
-    private static String getUsersQuery(Scanner scanner) {
+//    private static String getUsersQuery() {
+//
+//        System.out.println("Enter your search query");
+//
+//        return scanner.nextLine();
+//    }
 
-        System.out.println("Enter your search query");
-
-        return scanner.nextLine();
-    }
-
-    public static void makeQuery(Scanner scanner) {
+    public static void makeQuery(String usersQuery) {
 
         List<SocketAddr> hosts = HostCacheReader.readHostCache();
 
-        String usersQuery = getUsersQuery(scanner);
+//        Scanner scanner = ScannerSingleton.getInstance();
+//
+//        System.out.println("Enter your search query");
+//
+//        String usersQuery = scanner.nextLine();
+
+        System.out.println("searching...");
+
+
 
         byte queryLength = (byte) getPayloadLength(usersQuery);
 
+        System.out.println("1");
+
         QueryMessage queryMessage = new QueryMessage(queryLength, usersQuery);
 
+        System.out.println("2");
+        System.out.println(queryLength);
+
         for (SocketAddr host : hosts) {
+            System.out.println(host);
             sendQuery(host, queryMessage);
-}
+            System.out.println("in loop");
+        }
+        System.out.println("3");
     }
 
 
@@ -210,9 +227,8 @@ public class QueryMessage extends MessageAbstract {
 
         LOGGER.info("QUERY PROCESS");
 
-        LOGGER.debug("IPIPIPIPIP");
         byte[] localIpAddressBytes = Network.getLocalIpAddress();
-        InetAddress ipip = InetAddress.getByAddress(localIpAddressBytes);
+        InetAddress strIp = InetAddress.getByAddress(localIpAddressBytes);
 
         if (!matchedFiles.isEmpty()) {
             LOGGER.debug("file found");
@@ -223,14 +239,14 @@ public class QueryMessage extends MessageAbstract {
                     .withHops(this.getHops())
                     .withNumberOfHits(matchedFiles.size())
                     .withPort(6364)
-                    .withIpAddress(ipip.getHostAddress())// ???
+                    .withIpAddress(strIp.getHostAddress())// ???
                     .withSpeed(22222); // hook up later
 
-            LOGGER.debug("QM matchesfiles " + matchedFiles.size());
+            LOGGER.debug("Matched Files =" + matchedFiles.size());
 
             int index = 1;
             for (FileResults result: matchedFiles) {
-                LOGGER.debug("num matches" + String.valueOf(matchedFiles.size()));
+
                 LOGGER.debug("RESULT" + String.valueOf(index));
                 QueryHitMessage.Result result1 = new QueryHitMessage.Result(index, result.getFilename(), result.getFilesize(), result.getFileType());
                 builder.addResult(result1);
@@ -242,12 +258,10 @@ public class QueryMessage extends MessageAbstract {
             QueryHitMessage.sendQueryHit(addr, message);
 
 
-        } else {
-
-            System.out.println("No files found.");
         }
 
         return this;
     }
 }
 
+//else no files found

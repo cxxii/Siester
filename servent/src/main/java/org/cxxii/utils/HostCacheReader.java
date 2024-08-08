@@ -16,16 +16,20 @@ public class HostCacheReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HostCacheReader.class);
 
     public static List<SocketAddr> readHostCache() {
+
         LOGGER.info("Reading hostcache");
 
         ObjectMapper objectMapper = new ObjectMapper();
         Path hostCachePath = FileManager.getHostCachePath();
         List<SocketAddr> addresses = Collections.emptyList();
 
+
+
         if (Files.exists(hostCachePath) && Files.isReadable(hostCachePath)) {
             try {
                 if (Files.size(hostCachePath) > 0) {
                     addresses = objectMapper.readValue(hostCachePath.toFile(), new TypeReference<List<SocketAddr>>() {});
+                    LOGGER.debug(addresses.toString());
                 } else {
                     LOGGER.warn("Hostcache file is empty: {}", hostCachePath);
                 }

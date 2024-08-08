@@ -8,18 +8,17 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.*;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 import org.cxxii.json.HostsJson;
 import org.cxxii.json.NodePongJson;
+import org.cxxii.json.PongHitJson;
 import org.cxxii.network.Network;
-import org.cxxii.utils.FileManager;
-import org.cxxii.utils.HostCacheWriter;
-import org.cxxii.utils.Json;
-import org.cxxii.utils.PongCacheReader;
+import org.cxxii.server.SocketAddr;
+import org.cxxii.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -43,6 +42,8 @@ public class PongMessage extends MessageAbstract {
     private String ipAddressString;
     private byte sharedFiles;
     private int kilobytesShared;
+
+    private static Set<String> hostList = new HashSet<>();
 
     public PongMessage(byte[] pingID, byte TYPE_ID, byte timeToLive, byte hops, byte payloadLength, int portNum, byte[] ipAddress, byte sharedFiles, int kilobytesShared) {
         super(TYPE_ID, timeToLive, hops, payloadLength);
@@ -104,7 +105,7 @@ public class PongMessage extends MessageAbstract {
         int sharedFiles = 0;
         int kbShared = 0;
 
-        JsonObject serverConfig = Json.readJsonFromClasspath("serverconfig.json");
+        //JsonObject serverConfig = Json.readJsonFromClasspath("serverconfig.json"); // deprecated?
         int port = Network.getActivePort();
         byte[] ip = Network.getLocalIpAddress();
 
@@ -163,7 +164,7 @@ public class PongMessage extends MessageAbstract {
     public void sendPongMessage(InetSocketAddress addr) {
 
         String ip = addr.getAddress().getHostAddress();
-        int port = Network.getActivePort(); // TODO unfudge this
+        int port = Network.getActivePort();
 
         try (Socket socket = new Socket(ip, port);
              OutputStream outputStream = socket.getOutputStream()) {
@@ -177,17 +178,27 @@ public class PongMessage extends MessageAbstract {
     }
 
     public PongMessage process(InetSocketAddress addr) {
+
         LOGGER.info("Processing PONG...");
 
         try {
             HostsJson hostsJson = new HostsJson(ipAddressString, portNum);
             HostCacheWriter.appendPongToHostCache(hostsJson);
 
-            File file = getPongCacheFile(addr);
+            updatePongHit(hostsJson.getIp());
+            hostList.add(hostsJson.getIp());
+
+            File file = getPongCacheFile(addr); // what if this already exists?
+            LOGGER.debug("PONGCACHEFILE -" + file);
+
             NodePongJson nodePongJson = new NodePongJson(portNum, ipAddressString, sharedFiles, kilobytesShared, hops);
 
             List<NodePongJson> pongList = readExistingPongs(file);
             pongList.add(nodePongJson);
+
+//            if (pongList == null) {
+//                pongList = new ArrayList<>();
+//            }
 
             writePongsToFile(file, pongList);
 
@@ -199,8 +210,104 @@ public class PongMessage extends MessageAbstract {
         return this;
     }
 
+    public static int getHostListSize() {
+
+//        int counterInt = hostList.size();
+//
+//        int displayInt = counterInt;
+
+        return hostList.size();
+    }
+
+    public static void clearHostList(){
+        hostList.clear();
+        System.out.println(hostList);
+    }
+
+    public void setHostList(Set<String> hostList) {
+        this.hostList = hostList;
+    }
+
+    public int onlineHosts(String host) {
+
+        List<String> hostList = new ArrayList<>();
+
+
+        return 0;
+
+    }
+
+    private void updatePongHit(String ip) {
+
+        File pongHitFile = new File(FileManager.getPongHitPath().toUri());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            ObjectNode rootNode;
+
+            if (pongHitFile.exists() && pongHitFile.length() != 0) {
+
+                JsonNode jsonNode = objectMapper.readTree(pongHitFile);
+                if (jsonNode instanceof ObjectNode) {
+                    rootNode = (ObjectNode) jsonNode;
+                } else {
+
+                    rootNode = objectMapper.createObjectNode();
+                }
+            } else {
+
+                rootNode = objectMapper.createObjectNode();
+            }
+
+
+            if (rootNode.has(ip)) {
+
+                int hits = rootNode.get(ip).asInt();
+                rootNode.put(ip, hits + 1);
+            } else {
+
+                rootNode.put(ip, 1);
+            }
+
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(pongHitFile, rootNode);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static JsonNode readPongHitFile() {
+        LOGGER.info("Reading pongHitsFile");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Path pongHitFile = FileManager.getPongHitPath();
+        JsonNode jsonNode = null;
+
+        if (Files.exists(pongHitFile) && Files.isReadable(pongHitFile)) {
+            try {
+                if (Files.size(pongHitFile) > 0) {
+                    jsonNode = objectMapper.readTree(pongHitFile.toFile());
+                } else {
+                    LOGGER.warn("pong hit file is empty: {}", pongHitFile);
+                }
+            } catch (IOException e) {
+                LOGGER.error("Could not read hostcache", e);
+            }
+        } else {
+            LOGGER.warn("Hostcache file does not exist or is not readable: {}", pongHitFile);
+        }
+
+        return jsonNode;
+    }
+
+
+
+
     // move?
     private File getPongCacheFile(InetSocketAddress addr) {
+
         String filename = addr.getHostString().replace('.', '_') + ".json";
         File path = new File(FileManager.getNodePongDirPath().toString());
         return new File(path, filename);

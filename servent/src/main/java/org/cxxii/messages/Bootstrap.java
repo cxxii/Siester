@@ -1,5 +1,6 @@
 package org.cxxii.messages;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.cxxii.server.Server;
 import org.cxxii.utils.FileManager;
 import org.slf4j.Logger;
@@ -7,13 +8,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+
+import static org.cxxii.messages.PongMessage.readPongHitFile;
 
 public class Bootstrap {
     //private static final String bootstrapServerUrl = "http://127.0.0.1:4545/gnutella/get_peers";
     private static final String bootstrapServerUrl = "http://192.168.1.22:4545/bootstrap";
+    private static final String bootstrapHitsUrl = "http://192.168.1.22:4545/hits";
     //private static final String bootstrapServerUrl = "http://localhost:4545/bootstrap";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
@@ -23,6 +29,7 @@ public class Bootstrap {
     // TODO - Allow manual entry of pongcache is bootstrap's are down
 
     public static void pingBootstrapServer() throws IOException {
+
         LOGGER.info("Pinging Bootstrap Server");
 
         URL url = new URL(bootstrapServerUrl);
@@ -74,6 +81,56 @@ public class Bootstrap {
                     LOGGER.error("ERROR closing stream", e);
                 }
             }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    public static void sendHitsToBootstrap() {
+        LOGGER.info("Sending hit after hit");
+
+        HttpURLConnection connection = null;
+
+        try {
+            URL url = new URL(bootstrapHitsUrl);
+            LOGGER.info(url.toString());
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
+
+            OutputStream outputStream = connection.getOutputStream();
+
+            //String jsonText = "{\"message\": \"test\"}";
+
+
+            JsonNode pongHitJson = readPongHitFile();
+            if (pongHitJson != null) {
+
+               byte[] input = pongHitJson.toString().getBytes("UTF-8");
+                //byte[] input = jsonText.getBytes();
+                outputStream.write(input, 0, input.length);
+            } else {
+                LOGGER.warn("No pong hit data available to send");
+            }
+            outputStream.flush();
+            outputStream.close();
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                LOGGER.info("Successfully sent hits to bootstrap server");
+            } else {
+                LOGGER.warn("Failed to send hits to bootstrap server, response code: {}", responseCode);
+            }
+
+        } catch (IOException e) {
+            LOGGER.error("Error sending hits to bootstrap server", e);
+        } finally {
             if (connection != null) {
                 connection.disconnect();
             }

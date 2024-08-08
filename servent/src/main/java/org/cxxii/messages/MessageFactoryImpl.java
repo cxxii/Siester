@@ -1,5 +1,6 @@
 package org.cxxii.messages;
 
+import org.cxxii.gui.QueryHitListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +66,7 @@ public class MessageFactoryImpl implements MessageFactory {
         byte typeId = header[16];
         MessageParser parser = getParser(typeId);
         if (parser == null) throw new IOException("Unknown type ID: " + typeId);
+
 
         return parser.parse(header, payload, addr);
     }

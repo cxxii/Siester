@@ -1,11 +1,14 @@
 package org.cxxii.messages;
 
+import org.cxxii.gui.QueryHitListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +18,14 @@ import java.util.List;
 
 public class QueryHitMessageParser implements MessageParser {
 
+    private QueryHitListener listener;
+
     private final static Logger LOGGER = LoggerFactory.getLogger(QueryHitMessageParser.class);
+
+    public void setListener(QueryHitListener listener) {
+        this.listener = listener;
+    }
+
 
     @Override
     public QueryHitMessage parse(byte[] header, byte[] payload, InetSocketAddress addr) throws IOException {
@@ -75,7 +85,7 @@ public class QueryHitMessageParser implements MessageParser {
             String fileName = new String(Arrays.copyOfRange(payload, fileNameStartIndex, currentIndex), StandardCharsets.UTF_8);
             byte[] fn = Arrays.copyOfRange(payload, fileNameStartIndex, currentIndex);
 
-            LOGGER.debug("File Nname bytes" + Arrays.toString(fn));
+            LOGGER.debug("File Name bytes" + Arrays.toString(fn));
 
             currentIndex++; // Skip the null terminator
 
@@ -97,6 +107,19 @@ public class QueryHitMessageParser implements MessageParser {
                 .withSpeed(speed)
                 .withResults(resultSet)
                 .build();
+
+        SwingUtilities.invokeLater(() -> {
+            if (listener != null) {
+                try {
+                    listener.onQueryHitReceived(queryHitMessage.fileName());
+                } catch (UnknownHostException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                LOGGER.warn("QueryHitListener is not set.");
+            }
+        });
+
 
         return queryHitMessage.process();
     }

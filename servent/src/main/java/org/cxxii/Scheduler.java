@@ -1,5 +1,7 @@
 package org.cxxii;
 
+import org.cxxii.gui.SwingApp;
+import org.cxxii.messages.Bootstrap;
 import org.cxxii.messages.PingMessage;
 import org.cxxii.utils.FileManager;
 import org.slf4j.Logger;
@@ -28,6 +30,14 @@ public class Scheduler {
 
     public static void startPongCacheUpdates(long initialDelay, long period, TimeUnit unit) {
         scheduler.scheduleAtFixedRate(FileManager::pongCacheGenerator, initialDelay, period, unit);
+    }
+
+//    public static void startHostCounter(long initialDelay, long period, TimeUnit unit) {
+//        scheduler.scheduleAtFixedRate(SwingApp::updateActivePeersCount, initialDelay, period, unit);
+//    }
+
+    public static void startHitSender(long initialDelay, long period, TimeUnit unit) {
+        scheduler.scheduleAtFixedRate(Bootstrap::sendHitsToBootstrap, initialDelay, period, unit);
     }
 
     public static void stopPongCacheUpdates() {
