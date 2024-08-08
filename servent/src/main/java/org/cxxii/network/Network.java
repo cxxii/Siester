@@ -35,6 +35,11 @@ public class Network {
         return null; // No suitable address found
     }
 
+    public static String getLocalIpString() throws SocketException, UnknownHostException {
+
+        return InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
+    }
+
     public static int getActivePort() {
 
         int port = 0;

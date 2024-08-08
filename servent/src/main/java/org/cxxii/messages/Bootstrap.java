@@ -95,6 +95,7 @@ public class Bootstrap {
         try {
             URL url = new URL(bootstrapHitsUrl);
             LOGGER.info(url.toString());
+
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -111,7 +112,8 @@ public class Bootstrap {
 
             JsonNode pongHitJson = readPongHitFile();
             if (pongHitJson != null) {
-
+                LOGGER.debug("HIT HIT HIT");
+                System.out.println(pongHitJson.toString());
                byte[] input = pongHitJson.toString().getBytes("UTF-8");
                 //byte[] input = jsonText.getBytes();
                 outputStream.write(input, 0, input.length);

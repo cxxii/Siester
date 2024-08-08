@@ -134,7 +134,6 @@ public class PongMessage extends MessageAbstract {
                     node.getSharedFiles(),
                     node.getKilobytesShared());
 
-
             pong.sendPongMessage(addr);
         }
     }
@@ -189,7 +188,6 @@ public class PongMessage extends MessageAbstract {
             hostList.add(hostsJson.getIp());
 
             File file = getPongCacheFile(addr); // what if this already exists?
-            LOGGER.debug("PONGCACHEFILE -" + file);
 
             NodePongJson nodePongJson = new NodePongJson(portNum, ipAddressString, sharedFiles, kilobytesShared, hops);
 
@@ -221,7 +219,6 @@ public class PongMessage extends MessageAbstract {
 
     public static void clearHostList(){
         hostList.clear();
-        System.out.println(hostList);
     }
 
     public void setHostList(Set<String> hostList) {

@@ -46,15 +46,13 @@ public class PingMessage extends MessageAbstract {
 
         PongMessage.clearHostList(); // OK
 
-
-        String ipString = InetAddress.getByAddress(Network.getLocalIpAddress()).getHostAddress();
         List<SocketAddr> hosts = HostCacheReader.readHostCache();
 
         LOGGER.info("Known network size: " + HostCacheReader.getNetworkSize());
 
         if (hosts != null) {
             for (SocketAddr host : hosts) {
-                if (!host.getIp().getHostAddress().equals(ipString)) {
+                if (!host.getIp().getHostAddress().equals(Network.getLocalIpString())) {
                     LOGGER.info("Creating PING");
                     PingMessage ping = new PingMessage();
                     ping.sendPing(host);

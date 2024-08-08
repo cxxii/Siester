@@ -59,10 +59,10 @@ public class Server {
 
             // Start scheduled tasks
             // Scheduler.startPingCacheUpdates(0, 35, TimeUnit.SECONDS);
-            Scheduler.startPingHostCache(0, 20, TimeUnit.SECONDS);
-            Scheduler.startPongCacheUpdates(0, 20, TimeUnit.SECONDS);
+            Scheduler.startPingHostCache(0, 5, TimeUnit.SECONDS);
+            Scheduler.startPongCacheUpdates(0, 5, TimeUnit.SECONDS);
             // Scheduler.startHostCounter(1,2,TimeUnit.SECONDS);
-            Scheduler.startHitSender(4,40,TimeUnit.SECONDS);
+            Scheduler.startHitSender(5,10,TimeUnit.SECONDS);
             LOGGER.info("Scheduled tasks started.");
 
             // Enter CLI loop
@@ -147,3 +147,5 @@ public class Server {
 
     }
 }
+
+// BUG - bug that incorrectly overwrites hostcache??? could be due to schedule speed
