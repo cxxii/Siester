@@ -192,7 +192,7 @@ public class FileManager {
             List<NodePongJson> pongList = new ArrayList<>();
 
             // Basic - network is small, send all hosts regardless
-            if (numPongFiles < 20) {
+            if (numPongFiles < 10) {
                 for (File node : nodeCache) {
                     List<NodePongJson> nodePongs = objectMapper.readValue(node, new TypeReference<List<NodePongJson>>() {});
 

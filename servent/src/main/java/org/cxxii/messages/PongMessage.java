@@ -184,8 +184,12 @@ public class PongMessage extends MessageAbstract {
             HostsJson hostsJson = new HostsJson(ipAddressString, portNum);
             HostCacheWriter.appendPongToHostCache(hostsJson);
 
-            updatePongHit(hostsJson.getIp());
-            hostList.add(hostsJson.getIp());
+            updatePongHit(addr.getAddress().getHostAddress());
+
+            LOGGER.debug("GET HOST NAME" + addr.getAddress().getHostAddress());
+
+            hostList.add(addr.getAddress().getHostAddress());
+            LOGGER.debug("HOSTLIST " + hostList);
 
             File file = getPongCacheFile(addr); // what if this already exists?
 
@@ -246,6 +250,7 @@ public class PongMessage extends MessageAbstract {
             if (pongHitFile.exists() && pongHitFile.length() != 0) {
 
                 JsonNode jsonNode = objectMapper.readTree(pongHitFile);
+
                 if (jsonNode instanceof ObjectNode) {
                     rootNode = (ObjectNode) jsonNode;
                 } else {

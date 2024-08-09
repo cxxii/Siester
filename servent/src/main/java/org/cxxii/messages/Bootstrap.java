@@ -66,6 +66,7 @@ public class Bootstrap {
                 } else {
                     LOGGER.info("Received hosts from bootstrap server");
                     FileManager.writeHostsToFile(inputStream);
+                    LOGGER.info(inputStream.toString());
                 }
 
             } else {
