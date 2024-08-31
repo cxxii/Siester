@@ -59,10 +59,5 @@ public class HostCacheWriter {
                 LOGGER.error("Could not write to JSON file", e);
             }
         }
-
-
-
-        // Read existing JSON list from file
-
     }
 }

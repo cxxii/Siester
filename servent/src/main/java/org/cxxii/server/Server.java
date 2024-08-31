@@ -1,30 +1,21 @@
 package org.cxxii.server;
 
-import com.sun.net.httpserver.HttpServer;
-import org.cxxii.Scheduler;
-import org.cxxii.gui.CLI;
+import org.cxxii.startup.Scheduler;
 import org.cxxii.gui.QueryHitListener;
 import org.cxxii.gui.SwingApp;
 import org.cxxii.messages.*;
-import org.cxxii.network.Network;
 import org.cxxii.server.config.Config;
 import org.cxxii.server.config.ConfigManager;
-import org.cxxii.share.FileServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.cxxii.utils.FileManager;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-
-import static org.cxxii.messages.PingMessage.startPings;
 
 // TODO  - Move entry point to own class
 
@@ -59,17 +50,15 @@ public class Server {
 
             // Start scheduled tasks
             // Scheduler.startPingCacheUpdates(0, 35, TimeUnit.SECONDS);
-            Scheduler.startPingHostCache(0, 5, TimeUnit.SECONDS);
+            Scheduler.startPingHostCache(0, 5, TimeUnit.SECONDS); // Recurrent Pings
             Scheduler.startPongCacheUpdates(0, 5, TimeUnit.SECONDS);
-            // Scheduler.startHostCounter(1,2,TimeUnit.SECONDS);
+            Scheduler.startHostCounter(1,2,TimeUnit.SECONDS); //Online Hos
             Scheduler.startHitSender(5,10,TimeUnit.SECONDS);
             LOGGER.info("Scheduled tasks started.");
 
-            // Enter CLI loop
-//            CLI.loop();
-//            LOGGER.info("CLI loop started.");
 
-          //  SwingUtilities.invokeLater(SwingApp::createAndShowGUI);
+            // UNCOMMENT FOR GUI START
+             SwingUtilities.invokeLater(SwingApp::createAndShowGUI);
 
         } catch (IOException e) {
             LOGGER.error("IOException encountered", e);
@@ -142,10 +131,6 @@ public class Server {
 
             LOGGER.info("Hosts found in cache");
         }
-
         PingMessage.startPings();
-
     }
 }
-
-// BUG - bug that incorrectly overwrites hostcache??? could be due to schedule speed

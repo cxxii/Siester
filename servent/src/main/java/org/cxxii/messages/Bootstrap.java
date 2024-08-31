@@ -17,16 +17,15 @@ import java.util.Scanner;
 import static org.cxxii.messages.PongMessage.readPongHitFile;
 
 public class Bootstrap {
-    //private static final String bootstrapServerUrl = "http://127.0.0.1:4545/gnutella/get_peers";
     private static final String bootstrapServerUrl = "http://192.168.1.22:4545/bootstrap";
     private static final String bootstrapHitsUrl = "http://192.168.1.22:4545/hits";
+
     //private static final String bootstrapServerUrl = "http://localhost:4545/bootstrap";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
-
     private static int retries = 3;
 
-    // TODO - Allow manual entry of pongcache is bootstrap's are down
+    // TODO - Allow manual entry of pongcache if bootstrap is down
 
     public static void pingBootstrapServer() throws IOException {
 
@@ -51,7 +50,7 @@ public class Bootstrap {
 
 //                System.out.println(inputStream.available());
 
-                // TODO - if servent is reset with an complete cache it currently will not fulfill it
+                // TODO - if 'servent' is reset with an complete cache it currently will not fulfill it
                 if (inputStream.available() == 0) {
                     LOGGER.warn("Bootstrap hosts empty"); //
 
@@ -68,7 +67,6 @@ public class Bootstrap {
                     FileManager.writeHostsToFile(inputStream);
                     LOGGER.info(inputStream.toString());
                 }
-
             } else {
                 throw new IOException("Failed to ping bootstrap server. Response code: " + responseCode);
             }
@@ -108,12 +106,11 @@ public class Bootstrap {
 
             OutputStream outputStream = connection.getOutputStream();
 
-            //String jsonText = "{\"message\": \"test\"}";
 
 
             JsonNode pongHitJson = readPongHitFile();
             if (pongHitJson != null) {
-                LOGGER.debug("HIT HIT HIT");
+                LOGGER.debug("Pong Hit ");
                 System.out.println(pongHitJson.toString());
                byte[] input = pongHitJson.toString().getBytes("UTF-8");
                 //byte[] input = jsonText.getBytes();

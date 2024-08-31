@@ -30,6 +30,7 @@ public class MessageFactoryImpl implements MessageFactory {
 
 
     public MessageAbstract read(InputStream in, InetSocketAddress addr) throws IOException {
+
         LOGGER.info("Message received!");
         LOGGER.info("Reading Start...");
         byte[] header = new byte[HEADER_LENGTH];

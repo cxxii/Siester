@@ -1,0 +1,36 @@
+/* style.css */
+
+.root {
+    -fx-font-family: Arial, Helvetica, sans-serif;
+}
+
+.menu-bar {
+    -fx-background-color: #e6e6e6;
+    -fx-border-color: #ccc;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.tree-view {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #ccc;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+}
+
+.table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+
+.progress-bar {
+    -fx-accent: #4caf50;
+}
+
+.vbox {
+    -fx-padding: 10px;
+    -fx-spacing: 5px;
+}

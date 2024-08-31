@@ -1,4 +1,4 @@
-package org.cxxii;
+package org.cxxii.startup;
 
 import org.cxxii.gui.SwingApp;
 import org.cxxii.messages.Bootstrap;
@@ -32,14 +32,15 @@ public class Scheduler {
         scheduler.scheduleAtFixedRate(FileManager::pongCacheGenerator, initialDelay, period, unit);
     }
 
-//    public static void startHostCounter(long initialDelay, long period, TimeUnit unit) {
-//        scheduler.scheduleAtFixedRate(SwingApp::updateActivePeersCount, initialDelay, period, unit);
-//    }
+    public static void startHostCounter(long initialDelay, long period, TimeUnit unit) {
+        scheduler.scheduleAtFixedRate(SwingApp::updateActivePeersCount, initialDelay, period, unit);
+    }
 
     public static void startHitSender(long initialDelay, long period, TimeUnit unit) {
         scheduler.scheduleAtFixedRate(Bootstrap::sendHitsToBootstrap, initialDelay, period, unit);
     }
 
+//    DEPRECATED
     public static void stopPongCacheUpdates() {
         scheduler.shutdown();
     }
@@ -60,6 +61,7 @@ public class Scheduler {
         }
     }
 
+//    DEPRECATED
     public static void stopPingHostCache() {
         scheduler.shutdown();
     }

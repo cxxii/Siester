@@ -17,7 +17,7 @@ import java.util.List;
 public class FuzzySearch {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FuzzySearch.class);
-    private static final int THRESHOLD = 8;
+    private static final int THRESHOLD = 3;
 
     public static List<FileResults> fuzzySearchFiles(String query) {
 

@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="own ip now not in own cache">
+    <list default="true" id="c9c56e85-ee0f-4023-86c9-609a1a853d3e" name="Changes" comment="small fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/dockz.sh" beforeDir="false" afterPath="$PROJECT_DIR$/servent/dockz.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/servent/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/startup/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/Bootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PongMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/FileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/MessageFactoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/messages/PingMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/search/FuzzySearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/search/FuzzySearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostCacheWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/servent/src/main/java/org/cxxii/utils/HostCacheWriter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +73,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.44899738&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -86,69 +92,77 @@
       <recent name="$PROJECT_DIR$/polaris" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.cxxii.Main" />
+  <component name="RunManager" selected="JUnit.MessageAbstractTest">
+    <configuration name="DefaultHostDetailsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="servent" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.cxxii.*" />
+          <option name="PATTERN" value="Json.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="Json" />
+      <option name="MAIN_CLASS_NAME" value="Json.DefaultHostDetailsTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Network" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.cxxii.network.Network" />
+    <configuration name="FileServerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="servent" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.cxxii.network.*" />
+          <option name="PATTERN" value="downloading.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="downloading" />
+      <option name="MAIN_CLASS_NAME" value="downloading.FileServerTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.cxxii.server.Server" />
+    <configuration name="JsonGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="servent" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.cxxii.server.*" />
+          <option name="PATTERN" value="Json.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="Json" />
+      <option name="MAIN_CLASS_NAME" value="Json.JsonGeneratorTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SwingApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.cxxii.gui.SwingApp" />
+    <configuration name="LevenshteinDistanceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="servent" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.cxxii.gui.*" />
+          <option name="PATTERN" value="fuzzysearch.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="fuzzysearch" />
+      <option name="MAIN_CLASS_NAME" value="fuzzysearch.LevenshteinDistanceTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="QueryHitMessageParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MessageAbstractTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="servent" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="messages.parse.*" />
+          <option name="PATTERN" value="messageabstract.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="messages.parse" />
-      <option name="MAIN_CLASS_NAME" value="messages.parse.QueryHitMessageParserTest" />
+      <option name="PACKAGE_NAME" value="messageabstract" />
+      <option name="MAIN_CLASS_NAME" value="messageabstract.MessageAbstractTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -161,19 +175,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.Main" />
-      <item itemvalue="Application.SwingApp" />
-      <item itemvalue="Application.Network" />
-      <item itemvalue="Application.Server" />
-      <item itemvalue="JUnit.QueryHitMessageParserTest" />
+      <item itemvalue="JUnit.FileServerTest" />
+      <item itemvalue="JUnit.LevenshteinDistanceTest" />
+      <item itemvalue="JUnit.MessageAbstractTest" />
+      <item itemvalue="JUnit.DefaultHostDetailsTest" />
+      <item itemvalue="JUnit.JsonGeneratorTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.SwingApp" />
-        <item itemvalue="Application.Server" />
-        <item itemvalue="Application.Network" />
-        <item itemvalue="JUnit.QueryHitMessageParserTest" />
+        <item itemvalue="JUnit.MessageAbstractTest" />
+        <item itemvalue="JUnit.JsonGeneratorTest" />
+        <item itemvalue="JUnit.LevenshteinDistanceTest" />
+        <item itemvalue="JUnit.FileServerTest" />
+        <item itemvalue="JUnit.DefaultHostDetailsTest" />
       </list>
     </recent_temporary>
   </component>
@@ -213,7 +227,18 @@
       <workItem from="1722197842227" duration="32397000" />
       <workItem from="1722823199343" duration="18335000" />
       <workItem from="1722940018305" duration="39355000" />
-      <workItem from="1723105078473" duration="29915000" />
+      <workItem from="1723105078473" duration="30394000" />
+      <workItem from="1723236515040" duration="12201000" />
+      <workItem from="1723714632473" duration="332000" />
+      <workItem from="1723832596610" duration="1035000" />
+      <workItem from="1724237743203" duration="3337000" />
+      <workItem from="1724316575584" duration="2000000" />
+      <workItem from="1724352191438" duration="2250000" />
+      <workItem from="1724407051032" duration="234000" />
+      <workItem from="1724610459155" duration="2586000" />
+      <workItem from="1724701053506" duration="2679000" />
+      <workItem from="1724780848196" duration="12270000" />
+      <workItem from="1724938991219" duration="1861000" />
     </task>
     <task id="LOCAL-00001" summary="refactoring Pingmessages">
       <option name="closed" value="true" />
@@ -391,7 +416,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723143966802</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="small fixes">
+      <option name="closed" value="true" />
+      <created>1723168567151</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1723168567151</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -426,10 +459,19 @@
     <MESSAGE value="network integration - pong returning" />
     <MESSAGE value="pongcache back working" />
     <MESSAGE value="own ip now not in own cache" />
-    <option name="LAST_COMMIT_MESSAGE" value="own ip now not in own cache" />
+    <MESSAGE value="small fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="small fixes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/siester$Main.ic" NAME="Main Coverage Results" MODIFIED="1724785701673" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.cxxii.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/siester$MessageAbstractTest.ic" NAME="MessageAbstractTest Coverage Results" MODIFIED="1724785673754" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>messageabstract.*</FILTER>
+    </SUITE>
   </component>
 </project>

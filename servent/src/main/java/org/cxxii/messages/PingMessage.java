@@ -117,9 +117,6 @@ public class PingMessage extends MessageAbstract {
         return byteBuffer.array();
     }
 
-
-
-
     private void sendPing(SocketAddr host) {
         executorService.submit(() -> {
             for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
